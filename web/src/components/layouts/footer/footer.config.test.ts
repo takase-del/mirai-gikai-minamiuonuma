@@ -17,6 +17,7 @@ describe("footer.config", () => {
       routes.terms(),
       routes.privacy(),
       routes.developers(),
+      routes.gikaiSessions(),
     ]);
 
     for (const link of [...primaryLinks, ...policyLinks]) {

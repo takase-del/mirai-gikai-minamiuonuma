@@ -1,3 +1,6 @@
+// TODO(運営): インタビューで集めた意見の使い道は運営体制が決まるまで
+// 確定していない。ここでは「サイト上で公開する」という事実だけを書き、
+// 市議会や議員への提出を約束する表現は置かないこと。
 "use client";
 
 import { ArrowRight } from "lucide-react";
@@ -100,7 +103,7 @@ export function ExpertRegistrationModal({
             </DialogTitle>
           </DialogHeader>
           <p className="text-sm font-medium text-gray-800">
-            政策検討のために、有識者としてチームみらいから連絡をする可能性があります。登録情報は公開されません。
+            議案の内容を深く知るために、有識者として運営チームから連絡をする可能性があります。登録情報は公開されません。
           </p>
           <div className="mt-6">
             <Button onClick={handleClose} className="w-full">
@@ -122,7 +125,7 @@ export function ExpertRegistrationModal({
         </DialogHeader>
 
         <p className="text-sm text-gray-800 mt-2 font-medium">
-          政策検討のために、有識者としてチームみらいから連絡をする可能性があります。登録情報は公開されません。
+          議案の内容を深く知るために、有識者として運営チームから連絡をする可能性があります。登録情報は公開されません。
         </p>
 
         <div className="flex flex-col gap-3 mt-2">

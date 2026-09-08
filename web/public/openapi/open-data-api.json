@@ -384,7 +384,7 @@
           },
           "statusLabel": {
             "type": "string",
-            "description": "審議状況の日本語ラベル（衆議院審議中 / 成立 など）"
+            "description": "審議状況の日本語ラベル（委員会審査中 / 可決 など）"
           },
           "statusNote": {
             "type": ["string", "null"],
@@ -393,7 +393,7 @@
           "originatingHouse": {
             "type": "string",
             "enum": ["HR", "HC"],
-            "description": "提出元の議院（HR: 衆議院 / HC: 参議院）"
+            "description": "提出者区分（HR: 市長提出 / HC: 議員提出）"
           },
           "originatingHouseLabel": {
             "type": "string",

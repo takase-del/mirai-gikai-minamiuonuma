@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import Link from "next/link";
 import { EXTERNAL_LINKS } from "@/config/external-links";
+import { SITE } from "@/config/site";
 import { routes } from "@/lib/routes";
 
 type FooterLinkItem = {
@@ -11,9 +12,9 @@ type FooterLinkItem = {
 
 const links: FooterLinkItem[] = [
   {
-    label: "チームみらいについて",
-    href: EXTERNAL_LINKS.TEAM_MIRAI_ABOUT,
-    external: true,
+    label: "会期から探す",
+    href: routes.gikaiSessions(),
+    external: false,
   },
   {
     label: "利用規約",
@@ -31,8 +32,13 @@ const links: FooterLinkItem[] = [
     external: true,
   },
   {
-    label: "自主制作ガイドライン",
-    href: EXTERNAL_LINKS.FORK_GUIDELINES_NOTE,
+    label: "ソースコード（AGPL-3.0）",
+    href: EXTERNAL_LINKS.GITHUB_REPO,
+    external: true,
+  },
+  {
+    label: "本家「みらい議会」",
+    href: EXTERNAL_LINKS.ORIGINAL_MIRAI_GIKAI,
     external: true,
   },
 ];
@@ -58,12 +64,20 @@ export function DesktopMenuLinks() {
         </Link>
       ))}
       <p
+        className="font-medium text-xs text-mirai-text-note"
+        style={{
+          lineHeight: "1.48em",
+        }}
+      >
+        {SITE.disclaimer}
+      </p>
+      <p
         className="font-medium text-xs"
         style={{
           lineHeight: "1.48em",
         }}
       >
-        © 2025 Team Mirai
+        {SITE.copyright}
       </p>
     </div>
   );

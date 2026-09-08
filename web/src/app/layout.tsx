@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Lexend_Giga, Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import type { ReactNode } from "react";
+import { SITE } from "@/config/site";
 import { env } from "@/lib/env";
 
 const notoSansJP = Noto_Sans_JP({
@@ -26,22 +27,30 @@ const notoSerifJP = Noto_Serif_JP({
 
 const isDev = process.env.NODE_ENV === "development";
 const isStaging = process.env.VERCEL_TARGET_ENV === "staging";
-const siteTitle = "みらい議会｜チームみらい";
-const siteDescription =
-  "国会で今どんな法案が検討されているか、わかりやすく伝えるプラットフォーム";
-const siteName = "みらい議会";
+const siteTitle = SITE.name;
+const siteDescription = SITE.description;
+const siteName = SITE.name;
 const ogImage = {
   url: "/ogp.jpg",
   width: 1200,
   height: 630,
-  alt: "みらい議会のOGPイメージ",
+  alt: `${SITE.name}のOGPイメージ`,
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.webUrl),
   title: siteTitle,
   description: siteDescription,
-  keywords: [siteName, "議案", "政治", "日本", "政策", "解説", "チームみらい"],
+  keywords: [
+    siteName,
+    SITE.municipality,
+    SITE.councilName,
+    "議案",
+    "市議会",
+    "条例",
+    "政策",
+    "解説",
+  ],
   icons: {
     icon: isDev
       ? "/icons/pwa/icon_dev_192_v3.png"
@@ -82,7 +91,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#2aa693",
+  themeColor: SITE.themeColor,
 };
 
 export default function RootLayout({
@@ -95,7 +104,7 @@ export default function RootLayout({
       <body
         className={`${notoSansJP.variable} ${lexendGiga.variable} ${notoSerifJP.variable} font-sans antialiased bg-mirai-surface-light`}
       >
-        <NextTopLoader showSpinner={false} color="#2aa693" />
+        <NextTopLoader showSpinner={false} color={SITE.themeColor} />
         {children}
       </body>
     </html>

@@ -1,14 +1,33 @@
 /**
  * 外部リンク定数
+ *
+ * fork 元（team-mirai）のリンクは残さず、本サイト固有のものに差し替える。
+ * TODO: CHANGE_ME を含む値は、運営体制が決まり次第 実URLに置き換えること。
  */
 export const EXTERNAL_LINKS = {
-  REPORT: "https://forms.gle/wJXXMt6cv2ZdiCgg6",
-  ABOUT_NOTE: "https://note.com/team_mirai_jp/n/nd1656aa5f86d",
-  DONATION: "https://team-mir.ai/support/donation",
-  TEAM_MIRAI_ABOUT: "https://team-mir.ai/about",
-  TERMS: "https://team-mir.ai/terms",
-  PRIVACY: "https://team-mir.ai/privacy",
-  FAQ: "https://team-mirai.notion.site/FAQ-28cf6f56bae180bd84e7f7ae80f806a1",
+  /** 記載内容の誤りを報告する窓口 */
+  REPORT: "https://example.com/CHANGE_ME/report-form",
+  /** 本サイトの紹介記事 */
+  ABOUT_NOTE: "https://example.com/CHANGE_ME/about",
+  /** よくある質問 */
+  FAQ: "https://example.com/CHANGE_ME/faq",
+
+  /**
+   * 改変後ソースコードの公開先。
+   * AGPL-3.0 第13条により、ネットワーク越しの利用者がソースへ到達できる
+   * 必要があるため、フッター等から必ず辿れるようにしておく。
+   */
+  GITHUB_REPO: "https://github.com/CHANGE_ME/mirai-gikai-minamiuonuma",
+  /** fork 元の本家サービス（掲載はガイドラインの推奨事項） */
+  ORIGINAL_MIRAI_GIKAI: "https://gikai.team-mir.ai/",
+  /** fork 元リポジトリ */
+  UPSTREAM_REPO: "https://github.com/team-mirai/mirai-gikai",
   FORK_GUIDELINES_NOTE: "https://note.com/team_mirai_jp/n/nc59ec347e8c7",
-  GITHUB_REPO: "https://github.com/team-mirai/mirai-gikai",
+
+  /** 南魚沼市議会の一次情報 */
+  COUNCIL: "https://www.city.minamiuonuma.niigata.jp/gikai/",
+  COUNCIL_MINUTES:
+    "https://www.city.minamiuonuma.niigata.jp/gikai/kaigiroku_giketsukekka/",
+  COUNCIL_NEWSLETTER:
+    "https://www.city.minamiuonuma.niigata.jp/gikai/gikaidayori/",
 } as const;

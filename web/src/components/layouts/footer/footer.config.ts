@@ -1,4 +1,5 @@
 import { EXTERNAL_LINKS } from "@/config/external-links";
+import { SITE } from "@/config/site";
 import { routes } from "@/lib/routes";
 
 export type FooterLink = {
@@ -19,18 +20,17 @@ export const primaryLinks: FooterLink[] = [
     href: routes.home(),
   },
   {
-    label: "みらい議会とは",
-    href: EXTERNAL_LINKS.ABOUT_NOTE,
+    label: "会期から探す",
+    href: routes.gikaiSessions(),
+  },
+  {
+    label: `${SITE.councilName}（公式）`,
+    href: EXTERNAL_LINKS.COUNCIL,
     external: true,
   },
   {
-    label: "チームみらいについて",
-    href: EXTERNAL_LINKS.TEAM_MIRAI_ABOUT,
-    external: true,
-  },
-  {
-    label: "寄附で応援する",
-    href: EXTERNAL_LINKS.DONATION,
+    label: "会議録・議決結果",
+    href: EXTERNAL_LINKS.COUNCIL_MINUTES,
     external: true,
   },
 ];
@@ -52,5 +52,10 @@ export const policyLinks: FooterPolicyLink[] = [
   {
     label: "開発者向け",
     href: routes.developers(),
+  },
+  {
+    label: "ソースコード（AGPL-3.0）",
+    href: EXTERNAL_LINKS.GITHUB_REPO,
+    external: true,
   },
 ];

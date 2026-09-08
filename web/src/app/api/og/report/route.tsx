@@ -164,7 +164,7 @@ export async function GET(request: Request) {
             {truncatedSummary}
           </div>
 
-          {/* 法案名 */}
+          {/* 議案名 */}
           <div
             style={{
               display: "flex",
@@ -172,7 +172,7 @@ export async function GET(request: Request) {
               maxHeight: OG_BILL_NAME_MAX_HEIGHT,
               fontSize: 32,
               fontWeight: 800,
-              color: "#0f8472",
+              color: "#1a4570",
               lineHeight: 1.5,
               overflow: "hidden",
               wordBreak: "break-all",
@@ -209,7 +209,7 @@ export async function GET(request: Request) {
               letterSpacing: "0.03em",
             }}
           >
-            みらい議会
+            みらい議会＠南魚沼市
           </span>
         </div>
 
@@ -217,7 +217,7 @@ export async function GET(request: Request) {
         {logoDataUrl && (
           // biome-ignore lint/performance/noImgElement: ignore
           <img
-            alt="チームみらいロゴ"
+            alt="みらい議会＠南魚沼市ロゴ"
             src={logoDataUrl}
             width={189}
             height={160}

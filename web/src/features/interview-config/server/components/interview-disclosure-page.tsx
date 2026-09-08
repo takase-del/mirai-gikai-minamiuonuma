@@ -1,3 +1,6 @@
+// TODO(運営): インタビューで集めた意見の使い道は運営体制が決まるまで
+// 確定していない。ここでは「サイト上で公開する」という事実だけを書き、
+// 市議会や議員への提出を約束する表現は置かないこと。
 import "server-only";
 
 import { DEFAULT_INTERVIEW_CHAT_MODEL } from "@/lib/ai/models";
@@ -75,7 +78,7 @@ function StaticDisclosureSection() {
               <ul className="mt-1 space-y-2 list-none">
                 <li>
                   <span className="font-bold">公開を希望しない場合：</span>
-                  回答者の承諾なく、原文や個人が特定できる形で外部公開されることはありません。ただし、統計的な集計結果、または個人を特定できない範囲に匿名化した上で、国会答弁等において引用・活用される場合があります。
+                  回答者の承諾なく、原文や個人が特定できる形で外部公開されることはありません。ただし、統計的な集計結果、または個人を特定できない範囲に匿名化した上で、議案の解説等において引用・活用される場合があります。
                 </li>
                 <li>
                   <span className="font-bold">公開を希望する場合：</span>

@@ -1,3 +1,6 @@
+// TODO(運営): インタビューで集めた意見の使い道は運営体制が決まるまで
+// 確定していない。ここでは「サイト上で公開する」という事実だけを書き、
+// 市議会や議員への提出を約束する表現は置かないこと。
 "use client";
 
 import { ArrowRight, Lock } from "lucide-react";
@@ -55,7 +58,7 @@ export function MakePrivateModal({
             非公開にした場合、あなたのご意見が世の中に公開されることはありません。
           </CheckListItem>
           <CheckListItem>
-            チームみらい党内での政策検討に最大限活用させていただきます。
+            議案の解説をより正確にするために活用させていただきます。
           </CheckListItem>
         </div>
 

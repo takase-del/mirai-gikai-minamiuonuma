@@ -4,6 +4,8 @@ import type { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { EXTERNAL_LINKS } from "@/config/external-links";
+import { SITE } from "@/config/site";
 import { isInterviewPage } from "@/lib/page-layout-utils";
 import { routes } from "@/lib/routes";
 import { policyLinks, primaryLinks } from "./footer.config";
@@ -21,6 +23,7 @@ export function Footer() {
         <FooterLogoSection />
         <FooterPrimaryLinks />
         <FooterPolicies />
+        <FooterDisclaimer />
         <FooterCopyright />
       </div>
     </footer>
@@ -30,10 +33,10 @@ export function Footer() {
 function FooterLogoSection() {
   return (
     <div className="flex flex-col items-center text-center mb-9">
-      <Link href={routes.home()} aria-label="みらい議会 トップページ">
+      <Link href={routes.home()} aria-label={`${SITE.name} トップページ`}>
         <Image
           src="/img/logo.svg"
-          alt="みらい議会"
+          alt={SITE.name}
           width={150}
           height={128}
           className="h-auto"
@@ -91,10 +94,44 @@ function FooterPolicies() {
   );
 }
 
+/**
+ * fork ガイドラインで掲示が必須の免責文言と、AGPL-3.0 第13条が求める
+ * 改変後ソースコードへの導線をまとめて置く。
+ */
+function FooterDisclaimer() {
+  return (
+    <div className="mb-5 flex flex-col items-center gap-1 text-center text-[12px] leading-relaxed text-slate-700">
+      <p>{SITE.disclaimer}</p>
+      <p>{SITE.officialDisclaimer}</p>
+      <p>
+        本サイトは{" "}
+        <a
+          href={EXTERNAL_LINKS.ORIGINAL_MIRAI_GIKAI}
+          target="_blank"
+          rel="noreferrer"
+          className="underline transition-colors hover:text-slate-900"
+        >
+          みらい議会
+        </a>{" "}
+        を fork した派生サービスです（
+        <a
+          href={EXTERNAL_LINKS.GITHUB_REPO}
+          target="_blank"
+          rel="noreferrer"
+          className="underline transition-colors hover:text-slate-900"
+        >
+          ソースコード
+        </a>
+        ／AGPL-3.0）。
+      </p>
+    </div>
+  );
+}
+
 function FooterCopyright() {
   return (
     <div className="text-center text-sm font-medium text-slate-800">
-      © 2025 Team Mirai All rights Reserved
+      {SITE.copyright}
     </div>
   );
 }

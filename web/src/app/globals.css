@@ -106,14 +106,17 @@
   --color-mirai-progress-fill: #a9e89d;
 
   /* Gradient endpoints */
-  --color-mirai-gradient-start: #64d8c6;
-  --color-mirai-gradient-end: #bcecd3;
+  --color-mirai-gradient-start: #8fc3e8;
+  --color-mirai-gradient-end: #d8ecf7;
 
-  /* Team Mirai brand (party design system) */
-  --color-mirai-brand-teal: #30bca7;
-  --color-mirai-brand-teal-hover: #089781;
-  --color-mirai-brand-teal-deep: #17594f;
-  --color-mirai-brand-mint: #e2f6f3;
+  /* ブランドカラー（雪国の空と八海山をイメージした藍系）
+     トークン名は fork 元のものをそのまま残している。名前に teal / mint と
+     あるが値は藍系。名前を変えると本家追従時の衝突が増えるため、値だけ
+     差し替える方針。 */
+  --color-mirai-brand-teal: #2f6fae;
+  --color-mirai-brand-teal-hover: #1f5a94;
+  --color-mirai-brand-teal-deep: #123b63;
+  --color-mirai-brand-mint: #e6f1fa;
 
   /* Topic analysis */
   --color-topic-info-bg: #e5f3f0;
@@ -137,8 +140,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #2aa693;
-  --primary-accent: #0f8472;
+  --primary: #26619c;
+  --primary-accent: #1a4570;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -260,7 +263,7 @@
   }
 
   .bg-mirai-light-gradient {
-    background-image: linear-gradient(to bottom, #e2f6f3, #eef6e2);
+    background-image: linear-gradient(to bottom, #e6f1fa, #eef4f9);
   }
 
   .bg-mirai-white-fade {

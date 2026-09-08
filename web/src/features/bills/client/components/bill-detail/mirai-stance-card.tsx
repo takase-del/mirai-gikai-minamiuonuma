@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SITE } from "@/config/site";
 import type { BillStatusEnum, MiraiStance } from "../../../shared/types";
 import { getStanceStyles } from "../../../shared/utils/stance-styles";
 
@@ -8,31 +9,31 @@ interface MiraiStanceCardProps {
 }
 
 export function MiraiStanceCard({ stance, billStatus }: MiraiStanceCardProps) {
-  // 法案提出前の場合は専用のスタイルを使用
+  // 議案の上程前の場合は専用のスタイルを使用
   const isPreparing = billStatus === "preparing";
 
   if (!stance && !isPreparing) {
-    return null; // スタンスがなく、法案提出前でもない場合は何も表示しない
+    return null; // スタンスがなく、議案提出前でもない場合は何も表示しない
   }
 
   const styles = getStanceStyles(stance, isPreparing);
   const comment = isPreparing
-    ? "法案提出後、党内で検討のうえ賛否を表明します。"
+    ? "議案の上程後、運営チームで内容を確認のうえ見解を掲載します。"
     : stance?.comment;
 
   return (
     <>
-      <h2 className="text-[22px] font-bold mb-4">🗳️チームみらいの賛否</h2>
+      <h2 className="text-[22px] font-bold mb-4">🗳️運営チームの見解</h2>
       <div className="relative p-1 rounded-2xl bg-mirai-gradient">
         <div className="bg-white rounded-lg px-6 pb-8 pt-10">
           <div className="flex flex-col gap-8">
             {/* ヘッダー部分：ロゴとスタンスバッジ */}
             <div className="flex flex-col items-center gap-8">
-              {/* チームみらいロゴ */}
+              {/* サイトロゴ */}
               <div className="relative w-37 h-31">
                 <Image
                   src="/img/logo.svg"
-                  alt="チームみらい"
+                  alt={SITE.name}
                   fill
                   className="object-contain"
                 />

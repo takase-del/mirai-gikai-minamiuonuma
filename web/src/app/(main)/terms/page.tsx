@@ -1,3 +1,6 @@
+// TODO(法務): fork にあたりサービス名・運営者名のみ機械的に差し替えた
+// 段階です。記載されている取得情報・利用目的・問い合わせ先・準拠法は
+// 本サイトの実態に合わせて全面的に見直すこと。公開前に必須。
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/layouts/container";
@@ -11,8 +14,8 @@ import {
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "利用規約 | みらい議会",
-  description: "みらい議会の利用規約",
+  title: "利用規約 | みらい議会＠南魚沼市",
+  description: "みらい議会＠南魚沼市の利用規約",
 };
 
 export default function TermsPage() {
@@ -20,7 +23,7 @@ export default function TermsPage() {
     <LegalPageLayout
       title="利用規約"
       enLabel="Terms of Service"
-      description="みらい議会をご利用いただくにあたっての基本的なルールを定めています。"
+      description="みらい議会＠南魚沼市をご利用いただくにあたっての基本的なルールを定めています。"
       className="pt-24 md:pt-12"
     >
       <Container className="space-y-10">
@@ -29,7 +32,7 @@ export default function TermsPage() {
         </LegalParagraph>
 
         <LegalParagraph>
-          みらい議会（以下「本サービス」といいます。）をご利用いただく場合、以下の規約に同意いただいたものとみなします。
+          みらい議会＠南魚沼市（以下「本サービス」といいます。）をご利用いただく場合、以下の規約に同意いただいたものとみなします。
         </LegalParagraph>
 
         <section className="space-y-4">
@@ -71,7 +74,7 @@ export default function TermsPage() {
                 "サーバへの過剰な負荷、システムへの妨害・侵入・解析（リバースエンジニアリング等）行為。",
                 "自動化ツール、ボット等による不正操作。",
                 "AIモデルの悪用：システムプロンプト等の内部設定の推測、プロンプトインジェクション等による意図的な誤動作の誘発。",
-                "目的外利用：「みらい議会」の趣旨（国会提出法案等の関連テーマ）を著しく逸脱した応答を生成させる行為。",
+                "目的外利用：「みらい議会＠南魚沼市」の趣旨（市議会上程議案等の関連テーマ）を著しく逸脱した応答を生成させる行為。",
                 "なりすまし：他の人物や組織になりすまして本サービスを利用する行為。",
               ]}
             />
@@ -122,7 +125,7 @@ export default function TermsPage() {
                                 href={routes.interviewDataTerms()}
                                 className="text-primary-accent underline"
                               >
-                                みらい議会AIインタビューデータ利用規約
+                                みらい議会＠南魚沼市AIインタビューデータ利用規約
                               </Link>
                               」に同意する者であれば誰でもダウンロード可能なオープンデータとして第三者に提供すること
                             </>
