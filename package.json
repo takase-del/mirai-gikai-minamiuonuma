@@ -19,7 +19,8 @@
     "lint": "biome format . && biome lint .",
     "lint:fix": "biome format --write . && biome lint --write .",
     "postinstall": "npx simple-git-hooks",
-    "seed:minamiuonuma": "dotenv -e .env -- pnpm --filter @mirai-gikai/seed seed:minamiuonuma"
+    "seed:minamiuonuma": "dotenv -e .env -- pnpm --filter @mirai-gikai/seed seed:minamiuonuma",
+    "seed:minamiuonuma:prod": "dotenv -e .env.production -- pnpm --filter @mirai-gikai/seed seed:minamiuonuma"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",

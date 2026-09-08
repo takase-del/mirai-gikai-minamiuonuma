@@ -193,6 +193,28 @@ const curatedByKey = new Map(
 async function main() {
   const supabase = createAdminClient();
   console.log("🏔  南魚沼市議会データの投入を開始します");
+  console.log(`   接続先: ${process.env.SUPABASE_URL}`);
+
+  // clearAllData は全件削除から始まる。admin で解説を書き足したあとに
+  // うっかり流すと、その編集がすべて消える。すでにデータがある場合は
+  // 明示的に SEED_ALLOW_OVERWRITE=1 を付けたときだけ続行する。
+  const { count: existingBills } = await supabase
+    .from("bills")
+    .select("*", { count: "exact", head: true });
+
+  if (existingBills && existingBills > 0) {
+    if (process.env.SEED_ALLOW_OVERWRITE !== "1") {
+      console.error(
+        `\n❌ 既に議案が ${existingBills} 件あります。\n` +
+          "   このスクリプトは全件削除してから入れ直すため、admin での編集が失われます。\n" +
+          "   意図して入れ直す場合のみ SEED_ALLOW_OVERWRITE=1 を付けて再実行してください。"
+      );
+      process.exit(1);
+    }
+    console.log(
+      `⚠️  既存の議案 ${existingBills} 件を削除して入れ直します（SEED_ALLOW_OVERWRITE=1）`
+    );
+  }
 
   await clearAllData(supabase);
 
