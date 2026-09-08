@@ -1,13 +1,9 @@
-// TODO(法務): fork にあたりサービス名・運営者名のみ機械的に差し替えた
-// 段階です。記載されている取得情報・利用目的・問い合わせ先・準拠法は
-// 本サイトの実態に合わせて全面的に見直すこと。公開前に必須。
 import {
   ArrowUpRight,
   BookOpen,
   ChevronRight,
   Database,
   Github,
-  ScrollText,
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -18,7 +14,7 @@ import { routes } from "@/lib/routes";
 export const metadata: Metadata = {
   title: "開発者向け | みらい議会＠南魚沼市",
   description:
-    "みらい議会＠南魚沼市のオープンデータAPIなど、開発者・研究者向けの情報をまとめています。",
+    "みらい議会＠南魚沼市の議案データを取得できるオープンデータAPIなど、開発者・研究者向けの情報をまとめています。",
 };
 
 const links = [
@@ -26,15 +22,8 @@ const links = [
     href: routes.developersOpenDataApi(),
     icon: Database,
     title: "オープンデータAPI",
-    description: "AIインタビューの回答データを取得できるAPIのリファレンス。",
-    external: false,
-  },
-  {
-    href: routes.interviewDataTerms(),
-    icon: ScrollText,
-    title: "みらい議会＠南魚沼市AIインタビューデータ利用規約",
     description:
-      "オープンデータとして提供されるインタビューデータの利用条件。APIで取得したデータを利用・再配布する際にご参照ください。",
+      "議案の一覧・詳細を取得できるAPIのリファレンス。掲載している議案データを、そのままご利用いただけます。",
     external: false,
   },
   {

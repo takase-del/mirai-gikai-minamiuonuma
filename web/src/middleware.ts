@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { FEATURES } from "./config/features";
 import {
   DIFFICULTY_COOKIE_NAME,
   DIFFICULTY_COOKIE_OPTIONS,
@@ -21,7 +22,29 @@ export function isDevRoute(pathname: string): boolean {
   return pathname === "/dev" || pathname.startsWith("/dev/");
 }
 
+/**
+ * AIインタビュー機能のルートか判定する。
+ *
+ * 機能を止めているあいだは、ページも API もここでまとめて塞ぐ。
+ * 入口のボタンを隠すだけだと URL を直接叩けば到達できてしまうため。
+ */
+export function isInterviewRoute(pathname: string): boolean {
+  return (
+    /^\/(preview\/)?bills\/[^/]+\/interview(\/|$)/.test(pathname) ||
+    pathname.startsWith("/api/interview/") ||
+    pathname.startsWith("/api/open-data/interviews") ||
+    pathname === "/developers/interview-data-terms"
+  );
+}
+
 export async function middleware(request: NextRequest) {
+  // 無効にしている機能のルートは存在しないものとして扱う。
+  // app/not-found.tsx がトップへリダイレクトする実装なので、結果として
+  // 未知のURLを開いたときと同じ挙動（トップへ誘導）になる。
+  if (!FEATURES.aiInterview && isInterviewRoute(request.nextUrl.pathname)) {
+    return NextResponse.rewrite(new URL("/not-found", request.url));
+  }
+
   // /dev routes: 本番では404、開発ではauthスキップ
   if (isDevRoute(request.nextUrl.pathname)) {
     if (process.env.NODE_ENV !== "development") {

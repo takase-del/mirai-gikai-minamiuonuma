@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   isDevRoute,
   isHtmlAcceptHeader,
+  isInterviewRoute,
   isValidDifficultyLevel,
   shouldApplyDifficultyCookie,
 } from "./middleware";
@@ -80,5 +81,32 @@ describe("isDevRoute", () => {
   it("その他のパスは対象外", () => {
     expect(isDevRoute("/")).toBe(false);
     expect(isDevRoute("/terms")).toBe(false);
+  });
+});
+
+describe("isInterviewRoute", () => {
+  it.each([
+    "/bills/abc-123/interview",
+    "/bills/abc-123/interview/disclosure",
+    "/bills/abc-123/interview/chat",
+    "/preview/bills/abc-123/interview",
+    "/api/interview/chat",
+    "/api/open-data/interviews",
+    "/developers/interview-data-terms",
+  ])("インタビュー機能のルート: %s", (pathname) => {
+    expect(isInterviewRoute(pathname)).toBe(true);
+  });
+
+  /** 議案そのものや、名前が似ているだけのパスを巻き込まないこと */
+  it.each([
+    "/",
+    "/bills",
+    "/bills/abc-123",
+    "/gikai/r8-03/bills",
+    "/api/open-data/bills",
+    "/developers",
+    "/interview",
+  ])("インタビュー機能ではないルート: %s", (pathname) => {
+    expect(isInterviewRoute(pathname)).toBe(false);
   });
 });

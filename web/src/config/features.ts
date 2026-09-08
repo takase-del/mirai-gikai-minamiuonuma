@@ -15,4 +15,23 @@ export const FEATURES = {
    * `CHAT_DAILY_*` / `CHAT_MONTHLY_*` のコスト上限もあわせて設定すること。
    */
   aiChat: false,
+
+  /**
+   * AIインタビュー（議案への意見をAIが対話で聞き取り、匿名レポートとして公開する機能）。
+   *
+   * 対話ログという重い個人情報を扱うため、意見の使い道・保存期間・公開範囲を
+   * 運営者が決めて利用規約に書き込むまで無効にしている。
+   * 有効化するときは、プライバシーポリシーとインタビューデータ利用規約の
+   * 記載も必ず合わせること。
+   */
+  aiInterview: false,
 } as const;
+
+/**
+ * 訪問者ごとの匿名IDを発行するかどうか。
+ *
+ * Supabaseの匿名認証は AIチャット・AIインタビュー・レポートへのリアクションの
+ * ためだけに使っている。どれも無効なら、閲覧するだけの利用者に識別子を
+ * 発行する理由がないので止める。
+ */
+export const NEEDS_ANONYMOUS_USER = FEATURES.aiChat || FEATURES.aiInterview;

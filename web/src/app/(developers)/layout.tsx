@@ -1,9 +1,7 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
 import type { ReactNode } from "react";
 import { Header } from "@/components/header";
 import { AuthGate } from "@/components/layouts/auth-gate";
 import { Footer } from "@/components/layouts/footer/footer";
-import { env } from "@/lib/env";
 
 /**
  * 開発者向けのフル幅レイアウト。
@@ -17,7 +15,6 @@ export default function DevelopersGroupLayout({
 }>) {
   return (
     <>
-      <GoogleAnalytics gaId={env.analytics.gaTrackingId ?? ""} />
       <AuthGate />
       <Header />
       {/* Team Mirai デザインシステム準拠: 白を基調のキャンバスにする */}

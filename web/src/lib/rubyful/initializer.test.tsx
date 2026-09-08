@@ -3,10 +3,11 @@ import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { RubyfulInitializer } from "./initializer";
 
-const sendGAEventMock = vi.hoisted(() => vi.fn());
+/* 解析ツールは入れていないため、報告の配線が生きているかだけを確かめる */
+const sendFuriganaStateEventMock = vi.hoisted(() => vi.fn());
 
-vi.mock("@next/third-parties/google", () => ({
-  sendGAEvent: sendGAEventMock,
+vi.mock("@/lib/analytics/preference-state-events", () => ({
+  sendFuriganaStateEvent: sendFuriganaStateEventMock,
 }));
 vi.mock("next/script", () => ({
   default: () => null,
@@ -14,24 +15,20 @@ vi.mock("next/script", () => ({
 
 beforeEach(() => {
   localStorage.clear();
-  sendGAEventMock.mockClear();
+  sendFuriganaStateEventMock.mockClear();
 });
 
 describe("RubyfulInitializer", () => {
-  it("マウント時にふりがな表示の現在値をGAへ送る", () => {
+  it("マウント時にふりがな表示の現在値を報告する", () => {
     localStorage.setItem("rubyful-enabled", "true");
     render(<RubyfulInitializer />);
 
-    expect(sendGAEventMock).toHaveBeenCalledWith("event", "furigana_state", {
-      enabled: true,
-    });
+    expect(sendFuriganaStateEventMock).toHaveBeenCalledWith(true);
   });
 
-  it("localStorage未設定時はfalseで送る", () => {
+  it("localStorage未設定時はfalseで報告する", () => {
     render(<RubyfulInitializer />);
 
-    expect(sendGAEventMock).toHaveBeenCalledWith("event", "furigana_state", {
-      enabled: false,
-    });
+    expect(sendFuriganaStateEventMock).toHaveBeenCalledWith(false);
   });
 });

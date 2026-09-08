@@ -13,6 +13,7 @@ import type { BillWithContent } from "../../../shared/types";
 import { BillShareButtons } from "../share/bill-share-buttons";
 import { BillContent } from "./bill-content";
 import { BillDetailHeader } from "./bill-detail-header";
+import { FEATURES } from "@/config/features";
 
 interface BillDetailLayoutProps {
   bill: BillWithContent;
@@ -42,11 +43,11 @@ export async function BillDetailLayout({
       <BillDetailClient
         bill={bill}
         currentDifficulty={currentDifficulty}
-        hasInterviewConfig={interviewConfig != null}
+        hasInterviewConfig={FEATURES.aiInterview && interviewConfig != null}
       >
         <BillDetailHeader
           bill={bill}
-          hasInterviewConfig={interviewConfig != null}
+          hasInterviewConfig={FEATURES.aiInterview && interviewConfig != null}
           opinionCount={topicAnalysis?.total_opinions ?? 0}
           topicCount={topicAnalysis?.topics.length ?? 0}
         />

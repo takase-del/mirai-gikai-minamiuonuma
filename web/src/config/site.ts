@@ -18,8 +18,14 @@ export const SITE = {
   municipality: "新潟県南魚沼市",
   councilName: "南魚沼市議会",
 
-  /** 運営主体。実際の運営者名に差し替えること */
+  /** 運営主体。個人の有志として運営している */
   operator: "みらい議会＠南魚沼市 運営チーム",
+  /** 法務ページで「個人情報取扱事業者」として示す氏名 */
+  operatorName: "高瀬章充",
+  /** 問い合わせ・記載内容の誤り報告の宛先 */
+  contactEmail: "takase@socialups.jp",
+  /** 利用規約・プライバシーポリシーの最終更新日 */
+  policyUpdatedAt: "2026年9月8日",
   copyright: "© 2026 みらい議会＠南魚沼市",
 
   /**
