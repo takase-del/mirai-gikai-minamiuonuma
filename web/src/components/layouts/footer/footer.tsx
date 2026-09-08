@@ -8,6 +8,7 @@ import { SITE_NAME } from "@/config/site";
 import { isInterviewPage } from "@/lib/page-layout-utils";
 import { routes } from "@/lib/routes";
 import { policyLinks, primaryLinks } from "./footer.config";
+import { ForkDisclaimer } from "./fork-disclaimer";
 
 export function Footer() {
   const pathname = usePathname();
@@ -22,6 +23,7 @@ export function Footer() {
         <FooterLogoSection />
         <FooterPrimaryLinks />
         <FooterPolicies />
+        <ForkDisclaimer />
         <FooterCopyright />
       </div>
     </footer>
