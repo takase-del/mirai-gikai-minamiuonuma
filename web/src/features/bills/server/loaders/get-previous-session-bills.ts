@@ -1,7 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { getDifficultyLevel } from "@/features/bill-difficulty/server/loaders/get-difficulty-level";
 import type { DifficultyLevelEnum } from "@/features/bill-difficulty/shared/types";
-import { getPreviousDietSession } from "@/features/diet-sessions/server/loaders/get-previous-diet-session";
+import { getLatestClosedDietSession } from "@/features/diet-sessions/server/loaders/get-latest-closed-diet-session";
 import type { DietSession } from "@/features/diet-sessions/shared/types";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import type { BillWithContent } from "../../shared/types";
@@ -21,11 +21,15 @@ export type PreviousSessionBillsResult = {
 } | null;
 
 /**
- * 前回の国会会期とその議案を取得（プレビュー用、最大5件）
- * 前回の会期がない場合はnullを返す
+ * 直近で閉会した会期とその議案を取得（プレビュー用、最大5件）
+ * 閉会済みの会期がひとつも無い場合は null を返す
+ *
+ * どの会期を出すかは `getLatestClosedDietSession` に合わせる。
  */
-export async function getPreviousSessionBills(): Promise<PreviousSessionBillsResult> {
-  const previousSession = await getPreviousDietSession();
+export async function getPreviousSessionBills(
+  now: Date
+): Promise<PreviousSessionBillsResult> {
+  const previousSession = await getLatestClosedDietSession(now);
   if (!previousSession) {
     return null;
   }

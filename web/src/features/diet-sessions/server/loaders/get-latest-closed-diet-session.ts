@@ -8,9 +8,10 @@ import { findLatestClosedDietSession } from "../repositories/diet-session-reposi
 /**
  * 指定日より前に閉会した直近の会期を取得する。
  *
- * 閉会中のトップページで「第○回国会は終了しました」を出すために使う。
- * `getPreviousDietSession` はアクティブ会期を起点にするため、閉会中は null に
- * なるか、ひとつ前の会期を返してしまう。
+ * 閉会中のトップページで「第○回国会は終了しました」を出すために使い、
+ * アーカイブ（過去の国会に提出された法案）に並べる会期もこれで決める。
+ * `is_active` は管理画面から手で立てるフラグで、閉会中はどの会期にも立って
+ * いないのが通常のため、会期の前後関係の判定には使わない。
  */
 export async function getLatestClosedDietSession(
   date: Date
