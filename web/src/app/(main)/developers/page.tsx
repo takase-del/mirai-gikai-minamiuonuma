@@ -13,7 +13,7 @@ import { EXTERNAL_LINKS } from "@/config/external-links";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "開発者向け | みらい議会",
+  title: "開発者向け",
   description:
     "みらい議会のオープンデータAPIなど、開発者・研究者向けの情報をまとめています。",
 };

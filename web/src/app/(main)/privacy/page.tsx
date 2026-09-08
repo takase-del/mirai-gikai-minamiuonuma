@@ -10,7 +10,7 @@ import {
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "プライバシーポリシー | みらい議会",
+  title: "プライバシーポリシー",
   description: "みらい議会のプライバシーポリシー",
 };
 

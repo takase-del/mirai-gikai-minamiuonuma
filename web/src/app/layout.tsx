@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Lexend_Giga, Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import type { ReactNode } from "react";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/config/site";
 import { env } from "@/lib/env";
 
 const notoSansJP = Noto_Sans_JP({
@@ -26,22 +27,23 @@ const notoSerifJP = Noto_Serif_JP({
 
 const isDev = process.env.NODE_ENV === "development";
 const isStaging = process.env.VERCEL_TARGET_ENV === "staging";
-const siteTitle = "みらい議会｜チームみらい";
-const siteDescription =
-  "国会で今どんな法案が検討されているか、わかりやすく伝えるプラットフォーム";
-const siteName = "みらい議会";
 const ogImage = {
   url: "/ogp.jpg",
   width: 1200,
   height: 630,
-  alt: "みらい議会のOGPイメージ",
+  alt: `${SITE_NAME}のOGPイメージ`,
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.webUrl),
-  title: siteTitle,
-  description: siteDescription,
-  keywords: [siteName, "議案", "政治", "日本", "政策", "解説", "チームみらい"],
+  // 各ページは自分の見出しだけを title に入れ、サービス名は template で付ける。
+  // ページごとに "〜 | サービス名" を直書きすると、名称変更のとき取りこぼす。
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  keywords: [SITE_NAME, "議案", "政治", "日本", "政策", "解説", "南魚沼市"],
   icons: {
     icon: isDev
       ? "/icons/pwa/icon_dev_192_v3.png"
@@ -54,15 +56,15 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   openGraph: {
-    title: siteTitle,
-    description: siteDescription,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     images: [ogImage],
-    siteName,
+    siteName: SITE_NAME,
   },
   twitter: {
     card: "summary_large_image",
-    title: siteTitle,
-    description: siteDescription,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     images: [ogImage.url],
   },
   robots: {

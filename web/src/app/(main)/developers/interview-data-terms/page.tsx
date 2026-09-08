@@ -8,7 +8,7 @@ import {
 } from "@/components/layouts/legal-page-layout";
 
 export const metadata: Metadata = {
-  title: "みらい議会AIインタビューデータ利用規約 | みらい議会",
+  title: "AIインタビューデータ利用規約",
   description:
     "みらい議会のAIインタビューデータをオープンデータとして利用するにあたっての条件を定めています。",
 };
