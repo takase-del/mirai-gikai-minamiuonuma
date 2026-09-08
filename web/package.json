@@ -45,6 +45,8 @@
     "langfuse": "^3.38.5",
     "langfuse-vercel": "^3.38.5",
     "lucide-react": "^0.542.0",
+    "mdast-util-gfm-table": "^2.0.0",
+    "micromark-extension-gfm-table": "^2.1.1",
     "nanoid": "^5.1.5",
     "next": "15.5.9",
     "nextjs-toploader": "^3.9.17",

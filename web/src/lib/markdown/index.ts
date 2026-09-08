@@ -7,12 +7,14 @@ import remarkBreaks from "remark-breaks";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import { FEATURES } from "@/config/features";
 import { LongPressSection } from "@/features/bills/client/components/bill-detail/long-press-section";
 import { DifficultyInfoCard } from "@/features/bills/server/components/bill-detail/difficulty-info-card";
 import { rehypeEmbedYouTube } from "./rehype-embed-youtube";
 import { rehypeExternalLinks } from "./rehype-external-links";
 import { rehypeInjectElement } from "./rehype-inject-element";
 import { rehypeWrapSections } from "./rehype-wrap-sections";
+import { remarkTable } from "./remark-table";
 
 // rehypeSanitizeのスキーマをカスタマイズ
 const sanitizeSchema = {
@@ -37,7 +39,12 @@ const sanitizeSchema = {
  */
 export async function parseMarkdown(markdown: string): Promise<ReactElement> {
   // Markdown → mdast（remarkBreaksでソフト改行をbreak nodeに変換）
-  const remarkProcessor = unified().use(remarkParse).use(remarkBreaks);
+  // remarkTable は表のために入れている。議案の解説では「改正前／改正後」や
+  // 金額の一覧を表で見せる場面が多く、これが無いとパイプ記号が生のまま出る。
+  const remarkProcessor = unified()
+    .use(remarkParse)
+    .use(remarkTable)
+    .use(remarkBreaks);
   const parsed = remarkProcessor.parse(markdown);
   const mdast = (await remarkProcessor.run(parsed)) as typeof parsed;
 
@@ -47,10 +54,15 @@ export async function parseMarkdown(markdown: string): Promise<ReactElement> {
     .use(rehypeWrapSections)
     .use(rehypeInjectElement, {
       injections: [
-        {
-          targetH2Index: 3,
-          tagName: "LongPressSection",
-        },
+        // 「長押しでAIに質問」の案内はチャットが有効なときだけ出す
+        ...(FEATURES.aiChat
+          ? [
+              {
+                targetH2Index: 3,
+                tagName: "LongPressSection",
+              },
+            ]
+          : []),
         {
           targetH2Index: -1,
           tagName: "DifficultyInfoCard",
