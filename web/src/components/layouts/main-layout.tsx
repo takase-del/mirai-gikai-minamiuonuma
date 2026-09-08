@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { FEATURES } from "@/config/features";
 import { isInterviewSection, isMainPage } from "@/lib/page-layout-utils";
 import { cn } from "@/lib/utils";
 
@@ -23,8 +24,11 @@ export function MainLayout({ children }: MainLayoutProps) {
         "relative max-w-[700px] mx-auto md:mt-24",
         // インタビューページ以外ではshadowを表示
         !isInterview && "sm:shadow-lg",
-        // TOP・法案一覧・法案詳細のみ、チャットサイドバー用のオフセット
-        useSidebarLayout && "pc:mr-[500px] xl:ml-[calc(calc(100vw-1180px)/2)]"
+        // TOP・議案一覧・議案詳細のみ、チャットサイドバー用のオフセット。
+        // チャットを出していないときにこれを付けると、右側に何も無い余白だけが残る。
+        FEATURES.aiChat &&
+          useSidebarLayout &&
+          "pc:mr-[500px] xl:ml-[calc(calc(100vw-1180px)/2)]"
       )}
     >
       {children}

@@ -9,6 +9,7 @@ import {
   type ChatButtonRef,
 } from "@/features/chat/client/components/chat-button";
 import type { BillWithContent } from "../../../shared/types";
+import { FEATURES } from "@/config/features";
 
 interface BillDetailClientProps {
   bill: BillWithContent;
@@ -43,13 +44,15 @@ export function BillDetailClient({
         {children}
       </TextSelectionWrapper>
 
-      {/* チャット機能 */}
-      <ChatButton
-        ref={chatButtonRef}
-        billContext={bill}
-        hasInterviewConfig={hasInterviewConfig}
-        difficultyLevel={currentDifficulty}
-      />
+      {/* チャット機能（FEATURES.aiChat で開閉する） */}
+      {FEATURES.aiChat && (
+        <ChatButton
+          ref={chatButtonRef}
+          billContext={bill}
+          hasInterviewConfig={hasInterviewConfig}
+          difficultyLevel={currentDifficulty}
+        />
+      )}
     </>
   );
 }

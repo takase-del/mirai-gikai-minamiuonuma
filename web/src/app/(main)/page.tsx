@@ -1,7 +1,7 @@
 import { Container } from "@/components/layouts/container";
-import { About } from "@/components/top/about";
+import { FEATURES } from "@/config/features";
 import { ComingSoonSection } from "@/components/top/coming-soon-section";
-import { TeamMirai } from "@/components/top/team-mirai";
+import { AboutOperator } from "@/components/top/about-operator";
 import { getDifficultyLevel } from "@/features/bill-difficulty/server/loaders/get-difficulty-level";
 import { BillDisclaimer } from "@/features/bills/client/components/bill-detail/bill-disclaimer";
 import { BillSearchOverlay } from "@/features/bills/client/components/bill-search-overlay";
@@ -45,7 +45,7 @@ export default async function Home() {
 
   const inSession = currentSession !== null;
 
-  // 注目に出した法案はタグ別から外す。同じカードが2回並ぶのを避ける。
+  // 注目に出した議案はタグ別から外す。同じカードが2回並ぶのを避ける。
   const featuredIds = new Set(
     inSession ? featuredBills.map((bill) => bill.id) : []
   );
@@ -54,7 +54,7 @@ export default async function Home() {
       ...group,
       bills: group.bills.filter((bill) => !featuredIds.has(bill.id)),
     }))
-    // 注目に出た法案しか無かったタグは、見出しだけが残るので落とす。
+    // 注目に出た議案しか無かったタグは、見出しだけが残るので落とす。
     .filter((group) => group.bills.length > 0);
 
   // モーダルの件数は全会期の公開議案から数える。チップの飛び先が /bills で、
@@ -73,7 +73,7 @@ export default async function Home() {
 
   return (
     <>
-      {/* 本日の国会セクション */}
+      {/* 本日の議会セクション */}
       <CurrentDietSession
         session={currentSession}
         closedSession={latestClosedSession}
@@ -98,7 +98,7 @@ export default async function Home() {
         <div className="py-10">
           <main className="flex flex-col gap-16">
             {/*
-              注目の法案は会期中だけ出す。閉会中に「注目」を掲げても、審議が
+              注目の議案は会期中だけ出す。閉会中に「注目」を掲げても、審議が
               動いていない期間の情報を強調することになる。
               なお getFeaturedBills はアクティブ会期が無いと全件スコープに
               落ちるので、データ側だけでは空にならない。
@@ -118,7 +118,7 @@ export default async function Home() {
         </div>
       </Container>
 
-      {/* 前回の国会セクション（Archive） */}
+      {/* 前回の会期セクション（Archive） */}
       {previousSessionData && (
         <div className="bg-mirai-surface-muted py-10">
           <Container>
@@ -132,24 +132,23 @@ export default async function Home() {
       )}
 
       <Container>
-        {/* みらい議会とは セクション */}
-        <About />
-
-        {/* チームみらいについて セクション */}
-        <TeamMirai />
+        {/* 運営について セクション */}
+        <AboutOperator />
 
         {/* 免責事項 */}
         <BillDisclaimer />
       </Container>
 
-      {/* チャット機能 */}
-      <HomeChatClient
-        currentDifficulty={currentDifficulty}
-        bills={billsByTag
-          .flatMap((x) => x.bills)
-          .concat(featuredBills)
-          .map(toBillChatContext)}
-      />
+      {/* チャット機能（FEATURES.aiChat で開閉する） */}
+      {FEATURES.aiChat && (
+        <HomeChatClient
+          currentDifficulty={currentDifficulty}
+          bills={billsByTag
+            .flatMap((x) => x.bills)
+            .concat(featuredBills)
+            .map(toBillChatContext)}
+        />
+      )}
     </>
   );
 }

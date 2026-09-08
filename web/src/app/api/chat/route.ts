@@ -5,6 +5,7 @@ import {
   handleChatRequest,
 } from "@/features/chat/server/services/handle-chat-request";
 import { chatErrorToResponse } from "@/features/chat/server/utils/chat-error-response";
+import { FEATURES } from "@/config/features";
 import { jsonResponse } from "@/lib/api/response";
 import { registerNodeTelemetry } from "@/lib/telemetry/register";
 
@@ -49,6 +50,12 @@ async function _mockResponse(_req: Request) {
 }
 
 export async function POST(req: Request) {
+  // 入口（UI）を閉じるだけだとエンドポイントは叩ける状態で残り、AI利用料が
+  // 発生しうる。フラグが落ちている間はサーバ側でも受け付けない。
+  if (!FEATURES.aiChat) {
+    return jsonResponse({ error: "Not Found" }, 404);
+  }
+
   // Vercel node環境でinstrumentationが自動で起動しない問題対応
   // 明示的にtelemetryを初期化
   await registerNodeTelemetry();
