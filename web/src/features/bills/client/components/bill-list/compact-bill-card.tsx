@@ -11,12 +11,11 @@ interface CompactBillCardProps {
 }
 
 /**
- * コンパクトな水平レイアウトの法案カード
- * 過去国会セクションや過去国会議案一覧ページで使用
+ * コンパクトな水平レイアウトの議案カード
+ * 過去の会期セクションや過去の会期議案一覧ページで使用
  */
 export function CompactBillCard({ bill, className }: CompactBillCardProps) {
   const displayTitle = bill.bill_content?.title || bill.name;
-  const statusLabel = bill.status === "enacted" ? "成立" : "提出";
 
   return (
     <Card
@@ -38,7 +37,7 @@ export function CompactBillCard({ bill, className }: CompactBillCardProps) {
             <BillStatusBadge status={bill.status} className="w-fit" />
             {bill.submitted_date && (
               <span className="text-xs text-muted-foreground">
-                {formatDateWithDots(bill.submitted_date)} {statusLabel}
+                {formatDateWithDots(bill.submitted_date)} 上程
               </span>
             )}
           </div>

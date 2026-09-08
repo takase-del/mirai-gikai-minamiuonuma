@@ -69,7 +69,7 @@ export function toOpenDataBillDetail(
 }
 
 /**
- * チームみらいの賛否行をレスポンス形式（日本語ラベル付き）に変換する。
+ * 運営チームの見解行をレスポンス形式（日本語ラベル付き）に変換する。
  */
 export function toOpenDataMiraiStance(
   stance: { type: StanceTypeEnum; comment: string | null } | null

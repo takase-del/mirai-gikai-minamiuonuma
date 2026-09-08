@@ -1,7 +1,8 @@
 import type { BillStatusEnum } from "../types";
+import { BILL_CARD_STATUS_LABELS } from "@mirai-gikai/shared/vocabulary";
 
 /**
- * 法案一覧のステータス絞り込みで使うグループ。
+ * 議案一覧のステータス絞り込みで使うグループ。
  *
  * DB の status は6値（preparing / introduced / in_originating_house /
  * in_receiving_house / enacted / rejected）だが、一覧のタブはデザイン上4つに束ねる。
@@ -19,20 +20,20 @@ export type BillStatusGroup = (typeof BILL_STATUS_GROUPS)[number];
 
 export const BILL_STATUS_GROUP_LABELS: Record<BillStatusGroup, string> = {
   all: "すべて",
-  deliberating: "審議中",
+  deliberating: BILL_CARD_STATUS_LABELS.deliberating,
   waiting: "審議待ち",
-  enacted: "成立",
-  rejected: "否決",
+  enacted: BILL_CARD_STATUS_LABELS.enacted,
+  rejected: BILL_CARD_STATUS_LABELS.rejected,
 };
 
 /**
  * status をタブのグループに畳む。
  *
  * 既存の `getCardStatusLabel` と同じ畳み方にする。あちらは `introduced` を
- * 「国会審議中」に含めるので、ここで「審議待ち」に落とすと、カードに
- * 「国会審議中」と出ている法案が「審議中」タブに現れない。
+ * 「審議中」に含めるので、ここで「審議待ち」に落とすと、カードに
+ * 「審議中」と出ている議案が「審議中」タブに現れない。
  *
- * 結果として「審議待ち」に残るのは `preparing`（提出前）だけになる。
+ * 結果として「審議待ち」に残るのは `preparing`（上程前）だけになる。
  */
 export function toBillStatusGroup(
   status: BillStatusEnum

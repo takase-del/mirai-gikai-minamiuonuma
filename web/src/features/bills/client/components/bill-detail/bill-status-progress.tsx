@@ -1,15 +1,14 @@
-import type { BillStatusEnum, HouseEnum } from "../../../shared/types";
+import { BILL_PROGRESS_STEPS } from "@mirai-gikai/shared/vocabulary";
+import type { BillStatusEnum } from "../../../shared/types";
 import {
   calculateProgressWidth,
   getCurrentStep,
-  getOrderedSteps,
   getStatusMessage,
   getStepState,
 } from "../../../shared/utils/bill-progress";
 
 interface BillStatusProgressProps {
   status: BillStatusEnum;
-  originatingHouse: HouseEnum;
   statusNote?: string | null;
 }
 
@@ -24,14 +23,6 @@ interface ProgressStepProps {
   isActive: boolean;
   isPreparing: boolean;
 }
-
-// 基本ステップ定義
-const BASE_STEPS = [
-  { label: "法案\n提出" },
-  { label: "衆議院\n審議" },
-  { label: "参議院\n審議" },
-  { label: "法案\n成立" },
-] as const;
 
 // ステータスバッジコンポーネント
 function StatusBadge({ message }: StatusBadgeProps) {
@@ -95,13 +86,11 @@ function ProgressStep({
 
 export function BillStatusProgress({
   status,
-  originatingHouse,
   statusNote,
 }: BillStatusProgressProps) {
   const isPreparing = status === "preparing";
   const currentStep = getCurrentStep(status);
 
-  const orderedSteps = getOrderedSteps(originatingHouse, BASE_STEPS);
   const progressWidth = calculateProgressWidth(currentStep);
 
   const statusMessage = getStatusMessage(status, statusNote);
@@ -129,7 +118,7 @@ export function BillStatusProgress({
 
             {/* ステップドット */}
             <div className="relative flex justify-around">
-              {orderedSteps.map((step, index) => {
+              {BILL_PROGRESS_STEPS.map((step, index) => {
                 const stepNumber = index + 1;
                 const isActive =
                   getStepState(stepNumber, currentStep, isPreparing) ===

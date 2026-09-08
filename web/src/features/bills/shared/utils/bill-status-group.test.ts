@@ -15,7 +15,7 @@ describe("toBillStatusGroup", () => {
     expect(toBillStatusGroup("in_receiving_house")).toBe("deliberating");
   });
 
-  // 既存の getCardStatusLabel が introduced を「国会審議中」に含めるため、
+  // 既存の getCardStatusLabel が introduced を「審議中」に含めるため、
   // ここで「審議待ち」に落とすとバッジとタブが食い違う。
   it("提出済みは既存バッジに合わせて「審議中」に含める", () => {
     expect(toBillStatusGroup("introduced")).toBe("deliberating");

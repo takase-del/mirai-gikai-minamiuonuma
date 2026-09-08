@@ -1,4 +1,8 @@
 import type { Database } from "@mirai-gikai/supabase";
+import {
+  BILL_STATUS_LABELS,
+  SUBMITTER_LABELS,
+} from "@mirai-gikai/shared/vocabulary";
 
 export type Bill = Database["public"]["Tables"]["bills"]["Row"];
 export type BillInsert = Database["public"]["Tables"]["bills"]["Insert"];
@@ -50,38 +54,20 @@ export const BILL_STATUS_ORDER: Record<BillStatus, number> = {
   preparing: 5,
 };
 
-// House display mapping
-export const HOUSE_LABELS: Record<OriginatingHouse, string> = {
-  HR: "衆議院",
-  HC: "参議院",
-};
+/**
+ * 提出者区分の表示ラベル。
+ *
+ * 一院制の市議会には発議院がないため、DB の house_enum を
+ * 「市長提出 / 議員提出」として読み替えている。
+ * 詳細は @mirai-gikai/shared/vocabulary を参照。
+ */
+export const HOUSE_LABELS: Record<OriginatingHouse, string> = SUBMITTER_LABELS;
 
 // ステータスを日本語ラベルに変換する関数
 export function getBillStatusLabel(
   status: BillStatus,
-  originatingHouse?: OriginatingHouse | null
+  // 一院制では審議中の議院を出し分ける必要がないため参照しない。
+  _originatingHouse?: OriginatingHouse | null
 ): string {
-  switch (status) {
-    case "preparing":
-      return "準備中";
-    case "introduced":
-      return "提出済み";
-    case "in_originating_house":
-      if (originatingHouse) {
-        return `${HOUSE_LABELS[originatingHouse]}審議中`;
-      }
-      return "審議中";
-    case "in_receiving_house":
-      if (originatingHouse) {
-        const receivingHouse = originatingHouse === "HR" ? "HC" : "HR";
-        return `${HOUSE_LABELS[receivingHouse]}審議中`;
-      }
-      return "審議中";
-    case "enacted":
-      return "成立";
-    case "rejected":
-      return "否決";
-    default:
-      return status;
-  }
+  return BILL_STATUS_LABELS[status] ?? status;
 }

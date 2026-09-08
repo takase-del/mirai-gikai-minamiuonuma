@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import type { BillWithContent } from "@/features/bills/shared/types";
 import { CompactBillCard } from "@/features/bills/client/components/bill-list/compact-bill-card";
 import { routes } from "@/lib/routes";
+import { BILL_CARD_STATUS_LABELS } from "@mirai-gikai/shared/vocabulary";
 
 type FilterType = "all" | "enacted" | "rejected" | "other";
 
@@ -47,8 +48,16 @@ export function BillListWithStatusFilter({ bills }: Props) {
 
   const filters: { key: FilterType; label: string; count: number }[] = [
     { key: "all", label: "ALL", count: counts.all },
-    { key: "enacted", label: "成立", count: counts.enacted },
-    { key: "rejected", label: "否決", count: counts.rejected },
+    {
+      key: "enacted",
+      label: BILL_CARD_STATUS_LABELS.enacted,
+      count: counts.enacted,
+    },
+    {
+      key: "rejected",
+      label: BILL_CARD_STATUS_LABELS.rejected,
+      count: counts.rejected,
+    },
     { key: "other", label: "その他", count: counts.other },
   ];
 
@@ -72,10 +81,10 @@ export function BillListWithStatusFilter({ bills }: Props) {
         ))}
       </div>
 
-      {/* 法案リスト */}
+      {/* 議案リスト */}
       {filteredBills.length === 0 ? (
         <p className="text-center py-12 text-muted-foreground">
-          該当する法案がありません
+          該当する議案がありません
         </p>
       ) : (
         <div className="flex flex-col gap-3">

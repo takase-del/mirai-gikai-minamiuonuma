@@ -1,3 +1,4 @@
+import { BILL_CARD_STATUS_LABELS } from "@mirai-gikai/shared/vocabulary";
 import type { BillStatusEnum } from "../types";
 
 /** カード用の簡略化されたステータスラベルを取得 */
@@ -6,13 +7,13 @@ export function getCardStatusLabel(status: BillStatusEnum): string {
     case "introduced":
     case "in_originating_house":
     case "in_receiving_house":
-      return "国会審議中";
+      return BILL_CARD_STATUS_LABELS.deliberating;
     case "enacted":
-      return "法案成立";
+      return BILL_CARD_STATUS_LABELS.enacted;
     case "rejected":
-      return "否決";
+      return BILL_CARD_STATUS_LABELS.rejected;
     default:
-      return "法案提出前";
+      return BILL_CARD_STATUS_LABELS.preparing;
   }
 }
 

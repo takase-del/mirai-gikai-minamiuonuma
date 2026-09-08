@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { BILL_STATUS_LABELS } from "@mirai-gikai/shared/vocabulary";
 import {
   type BillStatus,
   HOUSE_LABELS,
@@ -31,14 +32,9 @@ import type { BillCreateInput } from "../../shared/types";
 import { shouldAutoCloseInterviewOnBillStatus } from "../../shared/utils/should-auto-close-interview";
 import { ThumbnailUpload } from "./thumbnail-upload";
 
-const BILL_STATUS_OPTIONS: Array<{ value: BillStatus; label: string }> = [
-  { value: "preparing", label: "準備中" },
-  { value: "introduced", label: "提出済み" },
-  { value: "in_originating_house", label: "審議中（提出院）" },
-  { value: "in_receiving_house", label: "審議中（送付院）" },
-  { value: "enacted", label: "成立" },
-  { value: "rejected", label: "否決" },
-];
+const BILL_STATUS_OPTIONS: Array<{ value: BillStatus; label: string }> = (
+  Object.keys(BILL_STATUS_LABELS) as BillStatus[]
+).map((value) => ({ value, label: BILL_STATUS_LABELS[value] }));
 
 const ORIGINATING_HOUSE_OPTIONS = Object.entries(HOUSE_LABELS).map(
   ([value, label]) => ({
@@ -119,11 +115,11 @@ export function BillFormFields({
           name="originating_house"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>提出院 *</FormLabel>
+              <FormLabel>提出者区分 *</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="提出院を選択" />
+                    <SelectValue placeholder="提出者区分を選択" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -169,11 +165,11 @@ export function BillFormFields({
         name="submitted_date"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>法案提出日 *</FormLabel>
+            <FormLabel>議案提出日 *</FormLabel>
             <FormControl>
               <Input type="date" {...field} />
             </FormControl>
-            <FormDescription>法案の提出日を設定してください</FormDescription>
+            <FormDescription>議案の提出日を設定してください</FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -236,7 +232,7 @@ export function BillFormFields({
               />
             </FormControl>
             <FormDescription>
-              衆議院の議案ページURLを入力してください（「これから掲載される法案」表示時に外部リンクとして使用）
+              衆議院の議案ページURLを入力してください（「これから掲載される議案」表示時に外部リンクとして使用）
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -253,7 +249,7 @@ export function BillFormFields({
               <Input
                 {...field}
                 value={field.value || ""}
-                placeholder="221-kaku-1-mof-法案名"
+                placeholder="221-kaku-1-mof-議案名"
               />
             </FormControl>
             <FormDescription>
@@ -269,14 +265,14 @@ export function BillFormFields({
         name="diet_session_id"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>国会会期</FormLabel>
+            <FormLabel>会期</FormLabel>
             <Select
               onValueChange={field.onChange}
               value={field.value ?? undefined}
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="国会会期を選択" />
+                  <SelectValue placeholder="会期を選択" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
@@ -288,7 +284,7 @@ export function BillFormFields({
               </SelectContent>
             </Select>
             <FormDescription>
-              議案が提出された国会会期を選択してください
+              議案が提出された会期を選択してください
             </FormDescription>
             <FormMessage />
           </FormItem>

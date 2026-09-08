@@ -223,7 +223,7 @@ export async function findTagsByBillIds(
 // ============================================================
 
 /**
- * 国会会期IDに紐づく公開済み議案を取得
+ * 会期IDに紐づく公開済み議案を取得
  */
 export async function findPublishedBillsByDietSession(
   dietSessionId: string,
@@ -261,7 +261,7 @@ export async function findPublishedBillsByDietSession(
 }
 
 /**
- * 前回の国会会期の公開済み議案を取得（成立法案を優先、件数制限あり）
+ * 前回の会期の公開済み議案を取得（成立議案を優先、件数制限あり）
  */
 export async function findPreviousSessionBills(
   dietSessionId: string,
@@ -302,7 +302,7 @@ export async function findPreviousSessionBills(
 }
 
 /**
- * 前回の国会会期の公開済み議案数を取得
+ * 前回の会期の公開済み議案数を取得
  */
 export async function countPublishedBillsByDietSession(
   dietSessionId: string,
