@@ -12,6 +12,10 @@
       "types": "./src/ai/models.ts",
       "default": "./src/ai/models.ts"
     },
+    "./vocabulary": {
+      "types": "./src/vocabulary/index.ts",
+      "default": "./src/vocabulary/index.ts"
+    },
     "./stream/inject-json-fields": {
       "types": "./src/stream/inject-json-fields.ts",
       "default": "./src/stream/inject-json-fields.ts"
