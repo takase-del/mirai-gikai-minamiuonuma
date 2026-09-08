@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Info } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -35,20 +34,6 @@ function ReviewCheckIcon({
         strokeLinejoin="round"
       />
     </svg>
-  );
-}
-
-/**
- * レビュー未完了時に記事上部に表示するバナー
- */
-export function ReviewInProgressBanner() {
-  return (
-    <div className="flex gap-2 items-center rounded-2xl bg-mirai-surface-gray px-4 py-2">
-      <Info className="size-5 shrink-0 text-mirai-text" />
-      <p className="text-[13px] font-medium leading-[1.5] text-mirai-text">
-        この記事は現在、複数有識者によるレビュー中です。今後内容が変更されることがあります。
-      </p>
-    </div>
   );
 }
 

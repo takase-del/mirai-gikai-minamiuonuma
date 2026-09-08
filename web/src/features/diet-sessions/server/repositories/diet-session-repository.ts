@@ -3,7 +3,7 @@ import { createAdminClient } from "@mirai-gikai/supabase";
 import type { DietSession } from "../../shared/types";
 
 /**
- * アクティブな国会会期を取得
+ * アクティブな会期を取得
  */
 export async function findActiveDietSession(): Promise<DietSession | null> {
   const supabase = createAdminClient();
@@ -23,7 +23,27 @@ export async function findActiveDietSession(): Promise<DietSession | null> {
 }
 
 /**
- * 指定日時点で開催中の国会会期を取得
+ * すべての会期を新しい順で取得する。
+ * 会期一覧ページ（/gikai）で使う。
+ */
+export async function findAllDietSessions(): Promise<DietSession[]> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from("diet_sessions")
+    .select("*")
+    .order("start_date", { ascending: false });
+
+  if (error) {
+    console.error("Failed to fetch diet sessions:", error);
+    return [];
+  }
+
+  return data ?? [];
+}
+
+/**
+ * 指定日時点で開催中の会期を取得
  */
 export async function findCurrentDietSession(
   targetDate: string
@@ -48,7 +68,7 @@ export async function findCurrentDietSession(
 }
 
 /**
- * slugで国会会期を取得
+ * slugで会期を取得
  */
 export async function findDietSessionBySlug(
   slug: string
@@ -70,7 +90,7 @@ export async function findDietSessionBySlug(
 }
 
 /**
- * 指定日より前の直近の国会会期を取得
+ * 指定日より前の直近の会期を取得
  */
 export async function findPreviousDietSession(
   beforeStartDate: string
