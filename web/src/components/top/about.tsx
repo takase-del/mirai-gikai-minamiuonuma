@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { EXTERNAL_LINKS } from "@/config/external-links";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/config/site";
+import { routes } from "@/lib/routes";
 import { LinkButton } from "./link-button";
 
 export function About() {
@@ -39,7 +39,7 @@ export function About() {
 
           {/* もっと詳しく知るボタン */}
           <LinkButton
-            href={EXTERNAL_LINKS.ABOUT_NOTE}
+            href={routes.about()}
             icon={{
               src: "/icons/note-icon.png",
               alt: "note",

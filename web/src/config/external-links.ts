@@ -6,7 +6,6 @@
  */
 export const EXTERNAL_LINKS = {
   REPORT: "https://forms.gle/wJXXMt6cv2ZdiCgg6",
-  ABOUT_NOTE: "https://note.com/team_mirai_jp/n/nd1656aa5f86d",
   TEAM_MIRAI_ABOUT: "https://team-mir.ai/about",
   TERMS: "https://team-mir.ai/terms",
   PRIVACY: "https://team-mir.ai/privacy",

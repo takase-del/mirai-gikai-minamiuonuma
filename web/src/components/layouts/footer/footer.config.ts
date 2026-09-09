@@ -21,8 +21,7 @@ export const primaryLinks: FooterLink[] = [
   },
   {
     label: `${SITE_NAME}とは`,
-    href: EXTERNAL_LINKS.ABOUT_NOTE,
-    external: true,
+    href: routes.about(),
   },
   {
     label: "チームみらいについて",
