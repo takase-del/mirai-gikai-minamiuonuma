@@ -1,5 +1,3 @@
-import type { Route } from "next";
-import Link from "next/link";
 import { Container } from "@/components/layouts/container";
 import {
   LegalList,
@@ -7,8 +5,15 @@ import {
   LegalParagraph,
   LegalSectionTitle,
 } from "@/components/layouts/legal-page-layout";
+import { TextLink } from "@/components/text-link";
 import { EXTERNAL_LINKS } from "@/config/external-links";
-import { FORK_DISCLAIMER, SITE_DESCRIPTION, SITE_NAME } from "@/config/site";
+import {
+  FORK_DISCLAIMER,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_OPERATOR,
+} from "@/config/site";
+import { routes } from "@/lib/routes";
 
 /**
  * このサービスについて説明するページ。
@@ -38,6 +43,41 @@ export function AboutPage() {
         </section>
 
         <section className="space-y-4">
+          <LegalSectionTitle>運営者</LegalSectionTitle>
+          <LegalParagraph>
+            {SITE_NAME}は{SITE_OPERATOR}
+            が運営しています。利用規約・プライバシーポリシーにおける「当方」は
+            {SITE_OPERATOR}を指します。
+          </LegalParagraph>
+          <LegalList
+            items={[
+              {
+                id: "terms",
+                content: (
+                  <TextLink
+                    className="text-mirai-brand-teal-hover"
+                    href={routes.terms()}
+                  >
+                    利用規約
+                  </TextLink>
+                ),
+              },
+              {
+                id: "privacy",
+                content: (
+                  <TextLink
+                    className="text-mirai-brand-teal-hover"
+                    href={routes.privacy()}
+                  >
+                    プライバシーポリシー
+                  </TextLink>
+                ),
+              },
+            ]}
+          />
+        </section>
+
+        <section className="space-y-4">
           <LegalSectionTitle>チームみらいとの関係</LegalSectionTitle>
           <LegalParagraph className="font-bold">
             {FORK_DISCLAIMER}。
@@ -45,7 +85,10 @@ export function AboutPage() {
           <LegalParagraph>
             {SITE_NAME}は、政党チームみらいが AGPL-3.0
             ライセンスで公開しているソフトウェア「みらい議会」を fork
-            （複製・改変）して運営している、非公式のサービスです。運営者はチームみらいとは別であり、掲載内容や運営方針についてチームみらいは責任を負いません。
+            （複製・改変）して運営している、非公式のサービスです。運営者は
+            {SITE_OPERATOR}
+            であってチームみらいではなく、掲載内容や運営方針について
+            チームみらいは責任を負いません。
           </LegalParagraph>
           <LegalParagraph>
             チームみらいが運営する本家のサービスは、以下からご覧いただけます。
@@ -55,17 +98,23 @@ export function AboutPage() {
               {
                 id: "upstream",
                 content: (
-                  <AboutLink href={EXTERNAL_LINKS.UPSTREAM_MIRAI_GIKAI}>
+                  <TextLink
+                    className="text-mirai-brand-teal-hover"
+                    href={EXTERNAL_LINKS.UPSTREAM_MIRAI_GIKAI}
+                  >
                     みらい議会（本家）
-                  </AboutLink>
+                  </TextLink>
                 ),
               },
               {
                 id: "team-mirai",
                 content: (
-                  <AboutLink href={EXTERNAL_LINKS.TEAM_MIRAI_ABOUT}>
+                  <TextLink
+                    className="text-mirai-brand-teal-hover"
+                    href={EXTERNAL_LINKS.TEAM_MIRAI_ABOUT}
+                  >
                     チームみらいについて
-                  </AboutLink>
+                  </TextLink>
                 ),
               },
             ]}
@@ -83,17 +132,23 @@ export function AboutPage() {
               {
                 id: "source",
                 content: (
-                  <AboutLink href={EXTERNAL_LINKS.GITHUB_REPO}>
+                  <TextLink
+                    className="text-mirai-brand-teal-hover"
+                    href={EXTERNAL_LINKS.GITHUB_REPO}
+                  >
                     本サービスのソースコード（GitHub）
-                  </AboutLink>
+                  </TextLink>
                 ),
               },
               {
                 id: "fork-guidelines",
                 content: (
-                  <AboutLink href={EXTERNAL_LINKS.FORK_GUIDELINES_NOTE}>
+                  <TextLink
+                    className="text-mirai-brand-teal-hover"
+                    href={EXTERNAL_LINKS.FORK_GUIDELINES_NOTE}
+                  >
                     チームみらいの自主制作ガイドライン
-                  </AboutLink>
+                  </TextLink>
                 ),
               },
             ]}
@@ -101,24 +156,5 @@ export function AboutPage() {
         </section>
       </Container>
     </LegalPageLayout>
-  );
-}
-
-function AboutLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href as Route}
-      target="_blank"
-      rel="noreferrer"
-      className="text-mirai-brand-teal-hover underline underline-offset-2 transition-opacity hover:opacity-70"
-    >
-      {children}
-    </Link>
   );
 }

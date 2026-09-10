@@ -1,5 +1,4 @@
-import type { Route } from "next";
-import Link from "next/link";
+import { TextLink } from "@/components/text-link";
 import { EXTERNAL_LINKS } from "@/config/external-links";
 import { FORK_DISCLAIMER, SITE_NAME } from "@/config/site";
 
@@ -22,32 +21,13 @@ export function ForkDisclaimer() {
       <p className="mt-1.5 text-xs font-medium leading-[1.7] text-mirai-text-secondary">
         {SITE_NAME}は、チームみらいが公開する「みらい議会」を fork した非公式の
         サービスです。本家は{" "}
-        <ExternalLink href={EXTERNAL_LINKS.UPSTREAM_MIRAI_GIKAI}>
+        <TextLink href={EXTERNAL_LINKS.UPSTREAM_MIRAI_GIKAI}>
           みらい議会
-        </ExternalLink>
+        </TextLink>
         、本サービスのソースコードは{" "}
-        <ExternalLink href={EXTERNAL_LINKS.GITHUB_REPO}>GitHub</ExternalLink>{" "}
+        <TextLink href={EXTERNAL_LINKS.GITHUB_REPO}>GitHub</TextLink>{" "}
         で公開しています。
       </p>
     </div>
-  );
-}
-
-function ExternalLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href as Route}
-      target="_blank"
-      rel="noreferrer"
-      className="underline underline-offset-2 transition-opacity hover:opacity-70"
-    >
-      {children}
-    </Link>
   );
 }

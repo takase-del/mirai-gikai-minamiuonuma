@@ -30,3 +30,12 @@ export const SITE_DESCRIPTION =
  */
 export const FORK_DISCLAIMER =
   "これは政党チームみらいが運営しているものではありません";
+
+/**
+ * 運営主体の正式名称。
+ *
+ * 利用規約・プライバシーポリシーの「当方」が誰を指すか、AIインタビューの
+ * 回答が誰の手に渡るかを示す。fork 元のチームみらいとは別の主体であることを
+ * 明確にするため、法務文書では必ずこの名前を使う。
+ */
+export const SITE_OPERATOR = "髙瀬章充";
