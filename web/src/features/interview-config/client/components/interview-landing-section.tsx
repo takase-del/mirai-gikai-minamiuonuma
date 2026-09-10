@@ -3,6 +3,7 @@ import type { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { SITE_OPERATOR } from "@/config/site";
 import { routes } from "@/lib/routes";
 
 interface InterviewLandingSectionProps {
@@ -13,7 +14,7 @@ function getCheckPoints(): string[] {
   return [
     "所要時間は約5分〜",
     "AIがあなたのご意見を深掘り",
-    "チームみらいの政策検討に活用",
+    `${SITE_OPERATOR}個人の政策検討に活用`,
   ];
 }
 

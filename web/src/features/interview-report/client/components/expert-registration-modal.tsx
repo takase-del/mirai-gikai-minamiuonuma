@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { SITE_OPERATOR } from "@/config/site";
 import { routes } from "@/lib/routes";
 import { registerExpert } from "../../server/actions/register-expert";
 import { expertRegistrationSchema } from "../../shared/utils/expert-registration-validation";
@@ -100,7 +101,8 @@ export function ExpertRegistrationModal({
             </DialogTitle>
           </DialogHeader>
           <p className="text-sm font-medium text-gray-800">
-            政策検討のために、有識者としてチームみらいから連絡をする可能性があります。登録情報は公開されません。
+            政策検討のために、有識者として{SITE_OPERATOR}
+            個人から連絡をする可能性があります。登録情報は公開されません。
           </p>
           <div className="mt-6">
             <Button onClick={handleClose} className="w-full">
@@ -122,7 +124,8 @@ export function ExpertRegistrationModal({
         </DialogHeader>
 
         <p className="text-sm text-gray-800 mt-2 font-medium">
-          政策検討のために、有識者としてチームみらいから連絡をする可能性があります。登録情報は公開されません。
+          政策検討のために、有識者として{SITE_OPERATOR}
+          個人から連絡をする可能性があります。登録情報は公開されません。
         </p>
 
         <div className="flex flex-col gap-3 mt-2">
