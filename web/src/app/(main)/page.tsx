@@ -18,7 +18,6 @@ import { countTagChipItems } from "@/features/bills/shared/utils/tag-chip-items"
 import { HomeChatClient } from "@/features/chat/client/components/home-chat-client";
 import { CurrentDietSession } from "@/features/diet-sessions/client/components/current-diet-session";
 import { getCurrentDietSession } from "@/features/diet-sessions/server/loaders/get-current-diet-session";
-import { getLatestClosedDietSession } from "@/features/diet-sessions/server/loaders/get-latest-closed-diet-session";
 import { getJapanTime } from "@/lib/utils/date";
 
 /** カテゴリタブの「注目」から飛ばす先。 */
@@ -30,14 +29,12 @@ export default async function Home() {
   const [
     { billsByTag, featuredBills, comingSoonBills, previousSessionData },
     currentSession,
-    latestClosedSession,
     currentDifficulty,
     suggestableBills,
     featuredTags,
   ] = await Promise.all([
-    loadHomeData(),
+    loadHomeData(japanTime),
     getCurrentDietSession(japanTime),
-    getLatestClosedDietSession(japanTime),
     getDifficultyLevel(),
     getSuggestableBills(),
     getFeaturedTags(),
@@ -73,10 +70,15 @@ export default async function Home() {
 
   return (
     <>
-      {/* 本日の国会セクション */}
+      {/*
+        本日の国会セクション。
+        「終了しました」に出す会期とアーカイブに並べる会期は同じものなので、
+        アーカイブ用に引いた会期をそのまま渡す。別に引き直すと、キャッシュが
+        切れている間だけ同じ問い合わせが2本走る。
+      */}
       <CurrentDietSession
         session={currentSession}
-        closedSession={latestClosedSession}
+        closedSession={previousSessionData?.session ?? null}
         now={japanTime}
       />
 
@@ -118,17 +120,13 @@ export default async function Home() {
         </div>
       </Container>
 
-      {/* 前回の国会セクション（Archive） */}
+      {/* 過去の国会セクション（Archive） */}
       {previousSessionData && (
-        <div className="bg-mirai-surface-muted py-10">
-          <Container>
-            <PreviousSessionSection
-              session={previousSessionData.session}
-              bills={previousSessionData.bills}
-              totalBillCount={previousSessionData.totalBillCount}
-            />
-          </Container>
-        </div>
+        <PreviousSessionSection
+          session={previousSessionData.session}
+          bills={previousSessionData.bills}
+          totalBillCount={previousSessionData.totalBillCount}
+        />
       )}
 
       <Container>

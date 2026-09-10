@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { SITE_OPERATOR } from "@/config/site";
 
 interface MakePrivateModalProps {
   open: boolean;
@@ -55,7 +56,7 @@ export function MakePrivateModal({
             非公開にした場合、あなたのご意見が世の中に公開されることはありません。
           </CheckListItem>
           <CheckListItem>
-            チームみらい党内での政策検討に最大限活用させていただきます。
+            {SITE_OPERATOR}個人での政策検討に最大限活用させていただきます。
           </CheckListItem>
         </div>
 

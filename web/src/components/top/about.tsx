@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { EXTERNAL_LINKS } from "@/config/external-links";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/config/site";
+import { routes } from "@/lib/routes";
 import { LinkButton } from "./link-button";
 
 export function About() {
@@ -18,7 +19,7 @@ export function About() {
             />
           </h2>
           <p className="text-sm font-bold text-primary-accent">
-            みらい議会とは
+            {SITE_NAME}とは
           </p>
         </div>
 
@@ -31,13 +32,14 @@ export function About() {
               できる限りわかりやすく
             </h3>
             <p className="text-[15px] leading-[28px] text-black">
-              みらい議会は、国会で今どんな法案が検討されているか、わかりやすく伝えるプラットフォームです。国民の意見を政治に届けることを目指して、継続的にアップデートしていきます。
+              {SITE_NAME}は、{SITE_DESCRIPTION}
+              です。国民の意見を政治に届けることを目指して、継続的にアップデートしていきます。
             </p>
           </div>
 
           {/* もっと詳しく知るボタン */}
           <LinkButton
-            href={EXTERNAL_LINKS.ABOUT_NOTE}
+            href={routes.about()}
             icon={{
               src: "/icons/note-icon.png",
               alt: "note",
@@ -45,7 +47,7 @@ export function About() {
               height: 25,
             }}
           >
-            みらい議会とは
+            {SITE_NAME}とは
           </LinkButton>
         </div>
       </div>

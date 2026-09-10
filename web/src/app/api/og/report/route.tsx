@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { SITE_NAME } from "@/config/site";
 import { getReportOgData } from "@/features/interview-report/server/loaders/get-report-og-data";
 import { truncateText } from "@/features/interview-report/shared/utils/truncate-text";
 
@@ -182,7 +183,7 @@ export async function GET(request: Request) {
           </div>
         </div>
 
-        {/* みらい議会バッジ */}
+        {/* サービス名バッジ */}
         <div
           style={{
             position: "absolute",
@@ -209,7 +210,7 @@ export async function GET(request: Request) {
               letterSpacing: "0.03em",
             }}
           >
-            みらい議会
+            {SITE_NAME}
           </span>
         </div>
 

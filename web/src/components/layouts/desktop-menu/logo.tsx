@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SITE_NAME } from "@/config/site";
 import { routes } from "@/lib/routes";
 
 /**
@@ -15,7 +16,7 @@ export function DesktopMenuLogo() {
       <div className="relative w-[116px] h-[98.38px]">
         <Image
           src="/img/logo.svg"
-          alt="みらい議会ロゴ"
+          alt={`${SITE_NAME}ロゴ`}
           fill
           className="object-contain"
           priority
@@ -32,7 +33,7 @@ export function DesktopMenuLogo() {
             letterSpacing: "0.1em",
           }}
         >
-          みらい議会
+          {SITE_NAME}
         </h1>
         <p
           className="font-bold text-black"

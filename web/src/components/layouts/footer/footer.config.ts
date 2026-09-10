@@ -1,4 +1,5 @@
 import { EXTERNAL_LINKS } from "@/config/external-links";
+import { SITE_NAME } from "@/config/site";
 import { routes } from "@/lib/routes";
 
 export type FooterLink = {
@@ -19,18 +20,12 @@ export const primaryLinks: FooterLink[] = [
     href: routes.home(),
   },
   {
-    label: "みらい議会とは",
-    href: EXTERNAL_LINKS.ABOUT_NOTE,
-    external: true,
+    label: `${SITE_NAME}とは`,
+    href: routes.about(),
   },
   {
     label: "チームみらいについて",
     href: EXTERNAL_LINKS.TEAM_MIRAI_ABOUT,
-    external: true,
-  },
-  {
-    label: "寄附で応援する",
-    href: EXTERNAL_LINKS.DONATION,
     external: true,
   },
 ];

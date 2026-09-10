@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import Link from "next/link";
 import { EXTERNAL_LINKS } from "@/config/external-links";
+import { SITE_NAME } from "@/config/site";
 import { routes } from "@/lib/routes";
 
 type FooterLinkItem = {
@@ -63,7 +64,7 @@ export function DesktopMenuLinks() {
           lineHeight: "1.48em",
         }}
       >
-        © 2025 Team Mirai
+        © 2026 {SITE_NAME}
       </p>
     </div>
   );
