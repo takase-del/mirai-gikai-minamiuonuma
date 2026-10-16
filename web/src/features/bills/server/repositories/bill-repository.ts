@@ -194,10 +194,14 @@ export async function findBillContentByDifficulty(
 // ============================================================
 
 import { groupTagsByBillId } from "../../shared/utils/group-tags";
+import { chunk } from "../../shared/utils/chunk";
 
 /**
  * 複数のbill_idに紐づくタグを一括取得し、bill_idごとにグループ化して返す
  */
+/** 1回の問い合わせに載せるIDの数。URLの長さ上限に収まるよう抑える */
+const TAG_LOOKUP_BATCH_SIZE = 50;
+
 export async function findTagsByBillIds(
   billIds: string[]
 ): Promise<Map<string, Array<{ id: string; label: string }>>> {
@@ -206,16 +210,25 @@ export async function findTagsByBillIds(
   }
 
   const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from("bills_tags")
-    .select("bill_id, tags(id, label)")
-    .in("bill_id", billIds);
 
-  if (error) {
-    throw new Error(`Failed to fetch tags: ${error.message}`);
-  }
+  // `in` の条件はURLに載るため、IDをまとめて渡すとクエリ文字列が長くなりすぎて
+  // "URI too long" で失敗する。議案が200件を超えて実際に一覧が500になったので
+  // 分割して問い合わせる。
+  const batches = await Promise.all(
+    chunk(billIds, TAG_LOOKUP_BATCH_SIZE).map(async (ids) => {
+      const { data, error } = await supabase
+        .from("bills_tags")
+        .select("bill_id, tags(id, label)")
+        .in("bill_id", ids);
 
-  return groupTagsByBillId(data ?? []);
+      if (error) {
+        throw new Error(`Failed to fetch tags: ${error.message}`);
+      }
+      return data ?? [];
+    })
+  );
+
+  return groupTagsByBillId(batches.flat());
 }
 
 // ============================================================
@@ -544,16 +557,23 @@ export async function findBillIdsWithPublicInterview(
   }
 
   const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from("interview_configs")
-    .select("bill_id")
-    .in("bill_id", billIds)
-    .eq("status", "public");
 
-  if (error) {
-    console.error("Failed to fetch interview configs:", error);
-    return new Set();
-  }
+  // findTagsByBillIds と同じ理由で分割する。IDをまとめて渡すとURLが長すぎて失敗する
+  const batches = await Promise.all(
+    chunk(billIds, TAG_LOOKUP_BATCH_SIZE).map(async (ids) => {
+      const { data, error } = await supabase
+        .from("interview_configs")
+        .select("bill_id")
+        .in("bill_id", ids)
+        .eq("status", "public");
 
-  return new Set(data.map((row) => row.bill_id));
+      if (error) {
+        console.error("Failed to fetch interview configs:", error);
+        return [];
+      }
+      return data;
+    })
+  );
+
+  return new Set(batches.flat().map((row) => row.bill_id));
 }

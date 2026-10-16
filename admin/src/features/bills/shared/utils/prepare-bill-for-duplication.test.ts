@@ -14,6 +14,9 @@ const baseBill: Bill = {
   diet_session_id: "session-001",
   is_featured: true,
   is_review_completed: true,
+  has_questions: true,
+  has_debate: true,
+  is_unanimous: false,
   originating_house: "HR",
   publish_status: "published",
   published_at: null,
@@ -64,6 +67,15 @@ describe("prepareBillForDuplication", () => {
     expect(result.diet_session_id).toBe("session-001");
     expect(result.is_featured).toBe(true);
     expect(result.originating_house).toBe("HR");
+  });
+
+  /** 複製した議案はまだ審議されていないので、審議のされ方は持ち越さない */
+  it("審議のされ方は引き継がない", () => {
+    const result = prepareBillForDuplication(baseBill);
+
+    expect(result.has_questions).toBe(false);
+    expect(result.has_debate).toBe(false);
+    expect(result.is_unanimous).toBeNull();
   });
 });
 

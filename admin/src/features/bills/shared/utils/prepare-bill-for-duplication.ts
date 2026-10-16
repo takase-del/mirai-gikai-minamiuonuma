@@ -11,6 +11,11 @@ export function prepareBillForDuplication(originalBill: Bill): BillInsert {
     updated_at: ___,
     status_order: ____,
     slug: _____,
+    publish_status_order: ______,
+    // 審議のされ方は複製先の議案では未審議なので引き継がない
+    has_questions: _______,
+    has_debate: ________,
+    is_unanimous: _________,
     ...billWithoutId
   } = originalBill;
 
@@ -20,6 +25,9 @@ export function prepareBillForDuplication(originalBill: Bill): BillInsert {
     name: `${originalBill.name} (複製)`,
     publish_status: "draft",
     is_review_completed: false,
+    has_questions: false,
+    has_debate: false,
+    is_unanimous: null,
   };
 }
 

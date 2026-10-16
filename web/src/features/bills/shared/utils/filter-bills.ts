@@ -1,11 +1,16 @@
 import type { BillWithContent } from "../types";
 import type { BillsListParams } from "./parse-bills-list-params";
+import {
+  type DeliberationFacts,
+  matchesDeliberation,
+} from "./deliberation-filter";
 import { searchBills } from "./search-bills";
 
 type FilterableBill = Pick<
   BillWithContent,
   "name" | "bill_content" | "tags" | "hasPublicInterview"
->;
+> &
+  DeliberationFacts;
 
 /**
  * ステータス以外の絞り込み（キーワード・カテゴリ・受付中）をまとめて適用する。
@@ -18,7 +23,10 @@ type FilterableBill = Pick<
  */
 export function filterBills<T extends FilterableBill>(
   bills: readonly T[],
-  params: Pick<BillsListParams, "query" | "tagId" | "interviewOnly">
+  params: Pick<
+    BillsListParams,
+    "query" | "tagId" | "interviewOnly" | "deliberation"
+  >
 ): T[] {
   let filtered = searchBills(bills, params.query);
 
@@ -29,6 +37,11 @@ export function filterBills<T extends FilterableBill>(
   }
   if (params.interviewOnly) {
     filtered = filtered.filter((bill) => bill.hasPublicInterview);
+  }
+  if (params.deliberation !== "all") {
+    filtered = filtered.filter((bill) =>
+      matchesDeliberation(bill, params.deliberation)
+    );
   }
   return filtered;
 }

@@ -324,6 +324,22 @@ ${debate}
 `;
 }
 
+/**
+ * 議決結果の文言から、全会一致だったかを読む。
+ *
+ * 「原案可決（全会一致）」「原案可決（賛成多数）」「否決（賛成少数）」の
+ * ように括弧書きで示される。まだ議決されていない議案は判定できないので null。
+ */
+function readUnanimity(statusNote: string): boolean | null {
+  if (statusNote.includes("全会一致")) {
+    return true;
+  }
+  if (/賛成(多数|少数)/.test(statusNote)) {
+    return false;
+  }
+  return null;
+}
+
 function curatedKey(session: string, no: string) {
   return `${session}::${no}`;
 }
@@ -423,6 +439,10 @@ async function main() {
       submitted_date: curated?.submittedDate ?? b.submitted_date ?? null,
       is_featured: curated?.isFeatured ?? false,
       is_review_completed: false,
+      // 審議のされ方で一覧から絞り込めるようにする
+      has_questions: (readMinutes(b)?.questions ?? "") !== "",
+      has_debate: (readMinutes(b)?.debate ?? "") !== "",
+      is_unanimous: readUnanimity(b.status_note),
       // AIチャットの根拠。議案書の本文をそのまま渡す
       knowledge_source: readDocument(b),
       use_knowledge_source_in_chat: readDocument(b) != null,

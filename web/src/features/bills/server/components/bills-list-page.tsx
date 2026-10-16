@@ -41,6 +41,12 @@ import { tagChipRowCount } from "../../shared/utils/tag-chip-row-count";
 import { getBillsWithReportCounts } from "../loaders/get-bills-with-report-counts";
 import { getFeaturedTags } from "../loaders/get-featured-tags";
 import { FEATURES } from "@/config/features";
+import {
+  DELIBERATION_FILTERS,
+  DELIBERATION_FILTER_HINTS,
+  DELIBERATION_FILTER_LABELS,
+  matchesDeliberation,
+} from "../../shared/utils/deliberation-filter";
 
 /**
  * 議案一覧（/bills）。見出しは「議案を検索する」。
@@ -73,6 +79,20 @@ export async function BillsListPage({
     filterByStatusGroup(scoped, params.status),
     params.sort
   );
+
+  // 審議のされ方の件数も、その軸自身を外した母集合から数える。選択中以外が
+  // すべて0件になるのを避けるため、タグの件数と同じ考え方にする。
+  const forDeliberationCounts = filterByStatusGroup(
+    filterBills(allBills, { ...params, deliberation: "all" }),
+    params.status
+  );
+  const deliberationCounts = Object.fromEntries(
+    DELIBERATION_FILTERS.map((key) => [
+      key,
+      forDeliberationCounts.filter((bill) => matchesDeliberation(bill, key))
+        .length,
+    ])
+  ) as Record<(typeof DELIBERATION_FILTERS)[number], number>;
 
   // タグの件数は、タグ以外の絞り込みを適用した母集合から数える。タグ自身を
   // 母集合に含めると、選択中のタグ以外がすべて0件になる。
@@ -184,6 +204,35 @@ export async function BillsListPage({
               )}
             </div>
           </div>
+        </section>
+
+        {/*
+          議決の結果はステータスのタブで絞れるが、議論が分かれたかどうかは
+          これまで一覧から辿れなかった。質疑・討論の有無は議事録にしかない
+          情報なので、カテゴリと並べて絞り込みの軸として出す。
+        */}
+        <section className="mb-4">
+          <h2 className="mb-2 text-[13px] font-bold text-mirai-text-secondary">
+            審議のされ方
+          </h2>
+          <div className="scrollbar-hide overflow-x-auto">
+            <div className="flex w-max items-center gap-1.5">
+              {DELIBERATION_FILTERS.map((key) => (
+                <Chip
+                  key={key}
+                  href={href({ deliberation: key })}
+                  active={params.deliberation === key}
+                  label={DELIBERATION_FILTER_LABELS[key]}
+                  count={deliberationCounts[key]}
+                />
+              ))}
+            </div>
+          </div>
+          {DELIBERATION_FILTER_HINTS[params.deliberation] && (
+            <p className="mt-1.5 text-xs text-mirai-text-note">
+              {DELIBERATION_FILTER_HINTS[params.deliberation]}
+            </p>
+          )}
         </section>
 
         {/*

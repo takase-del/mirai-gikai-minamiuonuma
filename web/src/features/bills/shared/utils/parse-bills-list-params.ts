@@ -2,6 +2,10 @@ import type { Route } from "next";
 import { routes } from "@/lib/routes";
 import { type BillStatusGroup, isBillStatusGroup } from "./bill-status-group";
 import {
+  type DeliberationFilter,
+  isDeliberationFilter,
+} from "./deliberation-filter";
+import {
   type BillSortKey,
   DEFAULT_BILL_SORT,
   isBillSortKey,
@@ -16,6 +20,8 @@ export type BillsListParams = {
   sort: BillSortKey;
   /** AIインタビュー受付中のみに絞るか。 */
   interviewOnly: boolean;
+  /** 審議のされ方（質疑あり・討論あり・賛否が分かれた）での絞り込み。 */
+  deliberation: DeliberationFilter;
 };
 
 /** ページ・コンポーネント間で共有する searchParams の形。 */
@@ -25,6 +31,7 @@ export type BillsListSearchParams = {
   tag?: string | string[];
   sort?: string | string[];
   interview?: string | string[];
+  deliberation?: string | string[];
 };
 
 function firstValue(value: string | string[] | undefined): string | undefined {
@@ -38,6 +45,7 @@ export const DEFAULT_BILLS_LIST_PARAMS: Readonly<BillsListParams> = {
   tagId: null,
   sort: DEFAULT_BILL_SORT,
   interviewOnly: false,
+  deliberation: "all",
 };
 
 /**
@@ -57,6 +65,9 @@ export function parseBillsListParams(
     tagId: tag || null,
     sort: isBillSortKey(sort) ? sort : DEFAULT_BILL_SORT,
     interviewOnly: firstValue(searchParams.interview) === "1",
+    deliberation: isDeliberationFilter(firstValue(searchParams.deliberation))
+      ? (firstValue(searchParams.deliberation) as DeliberationFilter)
+      : "all",
   };
 }
 
@@ -76,6 +87,8 @@ export function buildBillsListQuery(
   if (next.tagId) params.set("tag", next.tagId);
   if (next.sort !== DEFAULT_BILL_SORT) params.set("sort", next.sort);
   if (next.interviewOnly) params.set("interview", "1");
+  if (next.deliberation !== "all")
+    params.set("deliberation", next.deliberation);
 
   const queryString = params.toString();
   return queryString ? `?${queryString}` : "";

@@ -11,6 +11,7 @@ const defaults: BillsListParams = {
   tagId: null,
   sort: "new",
   interviewOnly: false,
+  deliberation: "all",
 };
 
 describe("parseBillsListParams", () => {
@@ -33,6 +34,7 @@ describe("parseBillsListParams", () => {
       tagId: "zeikin",
       sort: "old",
       interviewOnly: true,
+      deliberation: "all",
     });
   });
 
@@ -116,6 +118,7 @@ describe("buildBillsListQuery", () => {
       tagId: "zeikin",
       sort: "old",
       interviewOnly: true,
+      deliberation: "all",
     };
     const queryString = buildBillsListQuery(current, {});
     const parsed = Object.fromEntries(
