@@ -17,6 +17,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { clearAllData, createAdminClient } from "../shared/helper";
 import { CURATED_CONTENTS } from "./contents";
+import { buildHighlights, readDocumentFacts } from "./highlights";
 
 type SourceSession = {
   key: string;
@@ -106,6 +107,14 @@ function buildStubContent(
   const minutes = readMinutes(bill);
   const purpose = minutes ? summarizeReason(minutes.reason) : "";
 
+  const highlights = buildHighlights({
+    houseLabel,
+    statusNote: bill.status_note,
+    debate: minutes?.debate ?? "",
+    questions: minutes?.questions ?? "",
+    facts: readDocumentFacts(readDocument(bill)),
+  });
+
   const notice =
     purpose.length >= 40
       ? `${purpose}\n\n*本会議での提案理由の説明より。全文は下の「審議の経過」に掲載しています。*`
@@ -125,6 +134,7 @@ function buildStubContent(
 
 ${notice}
 
+${highlights}
 ## 基本情報
 
 | 項目 | 内容 |
@@ -254,6 +264,8 @@ type Minutes = {
   reason: string;
   /** 討論（原文）。討論が無かった議案は空 */
   debate: string;
+  /** 質疑（原文）。質疑が無かった議案は空 */
+  questions: string;
   /** 出典の議事録 */
   source: string;
 };
