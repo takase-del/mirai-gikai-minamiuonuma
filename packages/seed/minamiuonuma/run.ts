@@ -101,16 +101,26 @@ function buildStubContent(
     ? `\n## 市議会が公表している内容\n\n> ${bill.official_note}\n`
     : "";
 
+  // 本会議で述べられた提案理由があれば、それを「この議案について」に出す。
+  // 無い議案だけ、解説が未作成である旨の断りを出す。
+  const minutes = readMinutes(bill);
+  const purpose = minutes ? summarizeReason(minutes.reason) : "";
+
   const notice =
-    level === "normal"
-      ? "この議案は、市議会が公表している件名と議決結果だけを掲載しています。**内容の解説はまだ作成していません。** 議案の中身は、下の議案書（一次資料）でご確認ください。"
-      : "本ページは市議会公表情報の転記のみで構成されています。**解説は未作成です。** 条文・金額・施行期日等は一次資料を参照してください。";
+    purpose.length >= 40
+      ? `${purpose}\n\n*本会議での提案理由の説明より。全文は下の「審議の経過」に掲載しています。*`
+      : level === "normal"
+        ? "この議案は、市議会が公表している件名と議決結果だけを掲載しています。**内容の解説はまだ作成していません。** 議案の中身は、下の議案書（一次資料）でご確認ください。"
+        : "本ページは市議会公表情報の転記のみで構成されています。**解説は未作成です。** 条文・金額・施行期日等は一次資料を参照してください。";
 
   return {
     // タイトルの先頭に議案番号を残す。市議会の資料や会議録は議案番号で
     // 参照されるため、番号が無いと一次資料と突き合わせられない。
     title: bill.name,
-    summary: `${session.name}の議案です。${bill.status_note}。解説はまだ作成していません。`,
+    summary:
+      purpose.length >= 40
+        ? `${session.name}の議案です。${bill.status_note}。${purpose.slice(0, 90)}`
+        : `${session.name}の議案です。${bill.status_note}。解説はまだ作成していません。`,
     content: `## この議案について
 
 ${notice}
@@ -180,6 +190,63 @@ function buildDocumentSection(bill: SourceBill): string {
 ${document}
 \`\`\`
 `;
+}
+
+/** 逐条説明に入ったことを示す言い回し。ここから先は要約に含めない */
+const DETAIL_MARKER =
+  /ページ(を|に)(ご覧|お開き|戻|お願い)|新旧対照表|別紙|第\s*[0-9０-９]+\s*条(は|について|関係)/;
+
+/** 「それでは、第18号議案についてご説明申し上げます。」のような前置き */
+const BOILERPLATE =
+  /^(それでは|改めまして|おはようございます|こんにちは|よろしくお願い|続きまして|次に)|号(議案|報告)(につきまして|について|であります|でございます|です)|提案理由(を|の)|(ご)?説明(申し上げます|いたします|します)|提出させていただきます|よろしく(ご審議|お願い)/;
+
+function splitSentences(line: string): string[] {
+  return line.split(/(?<=。)/).filter((s) => s.trim() !== "");
+}
+
+/**
+ * 提案理由の説明から、議案の目的にあたる部分だけを取り出す。
+ *
+ * 提案理由は「前置き → 目的 → 逐条説明」という順でほぼ固定されている。
+ * 前置きを文単位で捨て、逐条説明に入る手前までを拾えば、要約を書き起こさずに
+ * 「何のための議案か」を示せる。言い換えを挟まないので、議会の記録を
+ * 取り違える余地がない。
+ */
+function summarizeReason(reason: string, limit = 420): string {
+  const lines = reason
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  const speakerAt = lines.findIndex((l) => l.startsWith("**"));
+  if (speakerAt < 0) {
+    return "";
+  }
+
+  // 発言者行には前置きと本題が同じ行に続くことがあるので、文単位で選り分ける
+  const head = lines[speakerAt].replace(/^\*\*[^*]+\*\*[\s　]*/, "");
+  const parts = splitSentences(head).filter((s) => !BOILERPLATE.test(s));
+
+  const out = parts.length > 0 ? [parts.join("")] : [];
+  let total = out.join("").length;
+
+  for (const line of lines.slice(speakerAt + 1)) {
+    if (DETAIL_MARKER.test(line)) {
+      break;
+    }
+    const kept = splitSentences(line).filter((s) => !BOILERPLATE.test(s));
+    if (kept.length === 0) {
+      continue;
+    }
+    const text = kept.join("");
+    out.push(text);
+    total += text.length;
+    if (total >= limit) {
+      break;
+    }
+  }
+
+  return out.join("").trim();
 }
 
 type Minutes = {
