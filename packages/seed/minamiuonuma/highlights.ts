@@ -179,3 +179,195 @@ export function buildHighlights(args: {
     "",
   ].join("\n");
 }
+
+/** 議事録の1発言 */
+type Utterance = { name: string; text: string };
+
+/** 「**氏名**　本文」の行と、その続きの行をまとめて1発言にする */
+function parseUtterances(text: string): Utterance[] {
+  const out: Utterance[] = [];
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (!line) {
+      continue;
+    }
+    const m = SPEAKER_LINE.exec(line);
+    if (m) {
+      out.push({ name: m[1].replace(/君$/, ""), text: m[2] });
+      continue;
+    }
+    if (out.length > 0) {
+      out[out.length - 1].text += line;
+    }
+  }
+  return out.filter((u) => u.name !== "議長");
+}
+
+/** 文の途中で切らないよう、句点の手前までで丸める */
+function clip(text: string, limit: number): string {
+  if (text.length <= limit) {
+    return text;
+  }
+  const head = text.slice(0, limit);
+  const lastStop = head.lastIndexOf("。");
+  return lastStop > limit * 0.5
+    ? head.slice(0, lastStop + 1)
+    : `${head.trimEnd()}…`;
+}
+
+/** 末尾を取るときに、文の途中から始まらないよう句点の次から拾う */
+function clipTail(text: string, limit: number): string {
+  if (text.length <= limit) {
+    return text;
+  }
+  const tail = text.slice(-limit);
+  const firstStop = tail.indexOf("。");
+  return firstStop >= 0 && firstStop < limit * 0.5
+    ? tail.slice(firstStop + 1).trim()
+    : tail.trim();
+}
+
+/** 「反対の立場で討論に参加します。」のような立場表明の一文 */
+const STANCE_SENTENCE =
+  /^[^。]*?(?:反対|賛成)(?:の立場|する立場)[^。]*。/;
+
+/**
+ * 討論から、各議員の述べた理由を抜き出す。
+ *
+ * 討論は「立場表明 → 論拠 → 結び」の順で述べられ、結びに「〜と考え、
+ * 反対討論といたします」と理由が要約されることが多い。要約を書き起こす
+ * 代わりに、冒頭と結びを原文のまま引き、間を（中略）で示す。
+ */
+export function extractArguments(
+  debate: string,
+  stance: "反対" | "賛成",
+  opts: { head?: number; tail?: number } = {}
+): Array<{ speaker: Speaker; excerpt: string }> {
+  const head = opts.head ?? 200;
+  const tail = opts.tail ?? 200;
+  const targets = new Set(
+    (stance === "反対" ? opposingSpeakers(debate) : supportingSpeakers(debate))
+      .map((s) => s.name)
+  );
+
+  const merged = new Map<string, string>();
+  for (const u of parseUtterances(debate)) {
+    if (!targets.has(u.name)) {
+      continue;
+    }
+    merged.set(u.name, (merged.get(u.name) ?? "") + u.text);
+  }
+
+  const factions = new Map(
+    (stance === "反対" ? opposingSpeakers(debate) : supportingSpeakers(debate))
+      .map((s) => [s.name, s.faction])
+  );
+
+  return [...merged].map(([name, raw]) => {
+    // 立場表明は要点の表に出ているので本文からは落とす
+    const body = raw.replace(STANCE_SENTENCE, "").trim();
+    const excerpt =
+      body.length <= head + tail
+        ? body
+        : `${clip(body, head)}\n\n（中略）\n\n${clipTail(body, tail)}`;
+    return { speaker: { name, faction: factions.get(name) ?? null }, excerpt };
+  });
+}
+
+/**
+ * 質疑から「議員の問い → 執行部の答え」の組を抜き出す。
+ *
+ * やりとりは往復するが、最初の問いと直後の答えで論点はおおむね伝わる。
+ * 議員1人につき1往復に絞り、全文は「審議の経過」で読める形にしておく。
+ */
+export function extractExchanges(
+  questions: string,
+  limit = 220
+): Array<{ asker: string; question: string; answerer: string; answer: string }> {
+  const utterances = parseUtterances(questions);
+  const out: Array<{
+    asker: string;
+    question: string;
+    answerer: string;
+    answer: string;
+  }> = [];
+  const seen = new Set<string>();
+
+  for (let i = 0; i < utterances.length; i++) {
+    const u = utterances[i];
+    if (EXECUTIVE.test(u.name) || seen.has(u.name)) {
+      continue;
+    }
+    const reply = utterances.slice(i + 1).find((x) => EXECUTIVE.test(x.name));
+    if (!reply) {
+      continue;
+    }
+    seen.add(u.name);
+    out.push({
+      asker: u.name,
+      question: clip(u.text.trim(), limit),
+      answerer: reply.name,
+      answer: clip(reply.text.trim(), limit),
+    });
+  }
+  return out;
+}
+
+/** 反対・賛成の理由をMarkdownにする */
+export function buildArgumentsSection(debate: string): string {
+  if (!debate) {
+    return "";
+  }
+  const blocks: string[] = [];
+  for (const [stance, label] of [
+    ["反対", "反対の理由"],
+    ["賛成", "賛成の理由"],
+  ] as const) {
+    const items = extractArguments(debate, stance);
+    if (items.length === 0) {
+      continue;
+    }
+    blocks.push(
+      `### ${label}`,
+      "",
+      ...items.flatMap(({ speaker, excerpt }) => [
+        `**${speaker.name} 議員**${speaker.faction ? `（${speaker.faction}）`: ""}`,
+        "",
+        excerpt
+          .split("\n")
+          .map((l) => (l ? `> ${l}` : ">"))
+          .join("\n"),
+        "",
+      ])
+    );
+  }
+  if (blocks.length === 0) {
+    return "";
+  }
+  return `${blocks.join("\n")}\n*討論の記録からの抜粋です。全文は下の「審議の経過」に掲載しています。*\n`;
+}
+
+/** 質疑のやりとりをMarkdownにする */
+export function buildExchangesSection(questions: string): string {
+  const items = extractExchanges(questions);
+  if (items.length === 0) {
+    return "";
+  }
+  const rows = items.flatMap((x) => [
+    `**${x.asker} 議員の質疑**`,
+    "",
+    `> ${x.question}`,
+    "",
+    `**${x.answerer}の答弁**`,
+    "",
+    `> ${x.answer}`,
+    "",
+  ]);
+  return [
+    "### 主な質疑",
+    "",
+    ...rows,
+    "*議員ごとに最初のやりとりを抜粋しています。全文は下の「審議の経過」に掲載しています。*",
+    "",
+  ].join("\n");
+}

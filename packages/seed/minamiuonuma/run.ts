@@ -17,7 +17,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { clearAllData, createAdminClient } from "../shared/helper";
 import { CURATED_CONTENTS } from "./contents";
-import { buildHighlights, readDocumentFacts } from "./highlights";
+import {
+  buildArgumentsSection,
+  buildExchangesSection,
+  buildHighlights,
+  readDocumentFacts,
+} from "./highlights";
 
 type SourceSession = {
   key: string;
@@ -115,6 +120,9 @@ function buildStubContent(
     facts: readDocumentFacts(readDocument(bill)),
   });
 
+  const argumentsSection = buildArgumentsSection(minutes?.debate ?? "");
+  const exchangesSection = buildExchangesSection(minutes?.questions ?? "");
+
   const notice =
     purpose.length >= 40
       ? `${purpose}\n\n*本会議での提案理由の説明より。全文は下の「審議の経過」に掲載しています。*`
@@ -135,6 +143,7 @@ function buildStubContent(
 ${notice}
 
 ${highlights}
+${argumentsSection}${exchangesSection}
 ## 基本情報
 
 | 項目 | 内容 |
