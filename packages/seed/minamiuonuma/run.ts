@@ -120,7 +120,7 @@ ${notice}
 | 項目 | 内容 |
 | --- | --- |
 ${rows.map(([k, v]) => `| ${k} | ${v} |`).join("\n")}
-${officialNote}${buildDocumentSection(bill)}
+${officialNote}${buildMinutesSection(bill)}${buildDocumentSection(bill)}
 ## 一次資料
 
 [${bill.source_url.endsWith(".pdf") ? "議案書（PDF）" : "市議会の議決結果ページ"}](${bill.source_url})
@@ -179,6 +179,60 @@ function buildDocumentSection(bill: SourceBill): string {
 \`\`\`
 ${document}
 \`\`\`
+`;
+}
+
+type Minutes = {
+  /** 提案理由の説明（議事録の原文） */
+  reason: string;
+  /** 討論（原文）。討論が無かった議案は空 */
+  debate: string;
+  /** 出典の議事録 */
+  source: string;
+};
+
+const MINUTES_INDEX: Record<string, string> = JSON.parse(
+  fs.readFileSync(path.join(DIR, "minutes-index.json"), "utf-8")
+);
+
+function readMinutes(bill: SourceBill): Minutes | null {
+  const file = MINUTES_INDEX[`${bill.session}::${bill.no}`];
+  if (!file) {
+    return null;
+  }
+  const full = path.join(DIR, "minutes", file);
+  return fs.existsSync(full)
+    ? (JSON.parse(fs.readFileSync(full, "utf-8")) as Minutes)
+    : null;
+}
+
+/**
+ * 議事録から「審議の経過」セクションを組み立てる。
+ *
+ * 議案書には「何が変わるか」しか書かれておらず、「なぜ変えるのか」は
+ * 本会議での提案理由の説明にしか残っていない。賛否が割れた議案では、
+ * 討論に反対理由が記録されている。どちらも要約せず原文のまま載せる。
+ */
+function buildMinutesSection(bill: SourceBill): string {
+  const minutes = readMinutes(bill);
+  if (!minutes) {
+    return "";
+  }
+
+  const debate = minutes.debate
+    ? `\n### 討論\n\n賛成・反対の立場から、次の意見が述べられました。\n\n${minutes.debate}\n`
+    : "";
+
+  return `
+## 審議の経過
+
+本会議の議事録から、提案理由の説明${minutes.debate ? "と討論" : ""}を原文のまま掲載しています。
+
+### 提案理由の説明
+
+${minutes.reason}
+${debate}
+出典: ${minutes.source}
 `;
 }
 
@@ -344,7 +398,9 @@ async function main() {
         summary: c.summary,
         // 解説を書いた議案にも、根拠を確かめられるよう議案書の本文を添える。
         // スタブ側は buildStubContent の中で既に挟んでいる。
-        content: curated ? c.content + buildDocumentSection(b) : c.content,
+        content: curated
+          ? c.content + buildMinutesSection(b) + buildDocumentSection(b)
+          : c.content,
       };
     });
   });
